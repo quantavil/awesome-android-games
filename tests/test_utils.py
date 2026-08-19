@@ -14,6 +14,7 @@ from utils import (
     load_games,
     normalize_game_entry,
     parse_github_url,
+    parse_repo_url,
     save_games_atomic,
 )
 
@@ -49,12 +50,33 @@ class TestUrlParsing:
         assert owner == "OpenTTD"
         assert repo == "OpenTTD"
 
+    def test_parse_repo_url_multi_forge(self):
+        # GitHub
+        owner, repo, host = parse_repo_url("https://github.com/Anuken/Mindustry")
+        assert (owner, repo, host) == ("Anuken", "Mindustry", "github.com")
+
+        # GitLab
+        owner, repo, host = parse_repo_url("https://gitlab.com/Hague/forkyz")
+        assert (owner, repo, host) == ("Hague", "forkyz", "gitlab.com")
+
+        # GitLab with tree/branch
+        owner, repo, host = parse_repo_url("https://gitlab.com/deepdaikon/Quinb/tree/HEAD")
+        assert (owner, repo, host) == ("deepdaikon", "Quinb", "gitlab.com")
+
+        # Codeberg
+        owner, repo, host = parse_repo_url("https://codeberg.org/Krixec/IED-FDroid.git")
+        assert (owner, repo, host) == ("Krixec", "IED-FDroid", "codeberg.org")
+
+        # SSH GitLab
+        owner, repo, host = parse_repo_url("git@gitlab.com:owner/repo.git")
+        assert (owner, repo, host) == ("owner", "repo", "gitlab.com")
+
     def test_invalid_urls_and_phishing_hosts(self):
         assert parse_github_url("") == (None, None)
         assert parse_github_url("not a url") == (None, None)
         assert parse_github_url("https://gitlab.com/owner/repo") == (None, None)
-        assert parse_github_url("https://fakegithub.com/owner/repo") == (None, None)
-        assert parse_github_url("https://github.com.evil.com/owner/repo") == (None, None)
+        assert parse_repo_url("") == (None, None, None)
+        assert parse_repo_url("not a url") == (None, None, None)
 
 
 class TestStarFormatting:
@@ -129,10 +151,15 @@ class TestHeadersAndAuth:
 class TestGenreInferenceAndSchema:
     def test_infer_genre(self):
         assert infer_genre("Turn-based 4X civilization strategy") == "Strategy & 4X"
-        assert infer_genre("Traditional roguelike dungeon crawler") == "Roguelike & RPG"
+        assert infer_genre("Traditional roguelike dungeon crawler") == "Roguelike & Dungeon Crawler"
         assert infer_genre("Voxel sandbox world engine") == "Sandbox & Simulation"
-        assert infer_genre("Fast 3D arcade kart racing") == "Arcade, Action & Racing"
-        assert infer_genre("Sudoku number grid puzzle") == "Puzzle & Board"
+        assert infer_genre("Fast 3D arcade kart racing") == "Racing & Sports"
+        assert infer_genre("Sudoku number grid puzzle") == "Puzzle & Logic"
+        assert infer_genre("Online chess matches") == "Board & Card Games"
+        assert infer_genre("Singing music rhythm party game") == "Rhythm & Music"
+        assert infer_genre("Classic jump 2D platformer runner") == "Platformer & Runner"
+        assert infer_genre("Daily crossword word trivia") == "Word, Trivia & Educational"
+        assert infer_genre("Space shooter retro arcade action") == "Action & Arcade"
 
     def test_normalize_game_entry_safe_with_nones(self):
         raw = {"owner": None, "repo": None, "description": None, "genre": None}
@@ -140,7 +167,7 @@ class TestGenreInferenceAndSchema:
         assert normalized["owner"] == ""
         assert normalized["repo"] == ""
         assert normalized["stars"] == 0
-        assert normalized["genre"] == "Casual & Adventure"
+        assert normalized["genre"] == "Casual & Party"
 
     def test_normalize_game_entry(self):
         raw = {

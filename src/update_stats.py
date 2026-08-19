@@ -33,7 +33,7 @@ from utils import (  # noqa: E402
     infer_genre,
     load_games,
     normalize_game_entry,
-    parse_github_url,
+    parse_repo_url,
     save_games_atomic,
 )
 
@@ -52,9 +52,9 @@ async def fetch_repo_stats_async(
     headers: Dict[str, str],
     sem: asyncio.Semaphore,
     cached_stats: Optional[Dict[str, Any]] = None,
+    host: str = "github.com",
 ) -> Dict[str, Any]:
-    """Fetch repo metadata asynchronously from GitHub API with rate limit preservation."""
-    repo_url = f"https://api.github.com/repos/{owner}/{repo}"
+    """Fetch repo metadata asynchronously with rate limit preservation and multi-forge support."""
     stats: Dict[str, Any] = {
         "stars": cached_stats.get("stars", 0) if cached_stats else 0,
         "last_commit": cached_stats.get("last_commit", "N/A") if cached_stats else "N/A",
@@ -66,55 +66,106 @@ async def fetch_repo_stats_async(
 
     async with sem:
         try:
-            resp = await client.get(repo_url, headers=headers, timeout=12.0, follow_redirects=True)
-            if resp.status_code == 200:
-                data = resp.json()
-                stats["stars"] = data.get("stargazers_count", stats["stars"])
-                stats["archived"] = data.get("archived", stats["archived"])
-                stats["language"] = data.get("language", stats["language"])
-                if data.get("license") and data["license"].get("spdx_id"):
-                    spdx = data["license"]["spdx_id"]
-                    if spdx != "NOASSERTION":
-                        stats["license"] = spdx
-                stats["default_branch"] = data.get("default_branch", "main")
+            if host in ("github.com", "www.github.com"):
+                repo_url = f"https://api.github.com/repos/{owner}/{repo}"
+                resp = await client.get(
+                    repo_url, headers=headers, timeout=12.0, follow_redirects=True
+                )
+                if resp.status_code == 200:
+                    data = resp.json()
+                    stats["stars"] = data.get("stargazers_count", stats["stars"])
+                    stats["archived"] = data.get("archived", stats["archived"])
+                    stats["language"] = data.get("language", stats["language"])
+                    if data.get("license") and data["license"].get("spdx_id"):
+                        spdx = data["license"]["spdx_id"]
+                        if spdx != "NOASSERTION":
+                            stats["license"] = spdx
+                    stats["default_branch"] = data.get("default_branch", "main")
 
-                # Auto-fill missing/placeholder metadata directly from GitHub
-                if cached_stats:
-                    curr_desc = cached_stats.get("description", "")
-                    if (not curr_desc or curr_desc == "Open-source Android game.") and data.get(
-                        "description"
+                    if cached_stats:
+                        curr_desc = cached_stats.get("description", "")
+                        if (not curr_desc or curr_desc == "Open-source Android game.") and data.get(
+                            "description"
+                        ):
+                            stats["description"] = data["description"].strip()
+                        if not cached_stats.get("name") or cached_stats.get("name") == repo:
+                            if data.get("name"):
+                                stats["name"] = data["name"].strip()
+                        if not cached_stats.get("genre"):
+                            topics = " ".join(data.get("topics", []))
+                            name_desc = f"{data.get('name', '')} {data.get('description', '')}"
+                            stats["genre"] = infer_genre(f"{name_desc} {topics}")
+
+                    pushed_at = data.get("pushed_at")
+                    if pushed_at:
+                        stats["last_commit"] = pushed_at.split("T")[0]
+                elif resp.status_code == 403:
+                    console.print(
+                        f"[yellow]Rate limit for {owner}/{repo}. Using cached stats.[/yellow]"
+                    )
+                else:
+                    console.print(
+                        f"[yellow]Failed {owner}/{repo} (HTTP {resp.status_code}). "
+                        "Cached stats kept.[/yellow]"
+                    )
+
+            elif "gitlab" in host or host in ("invent.kde.org", "gitlab.wikimedia.org"):
+                project_id = f"{owner}%2F{repo}"
+                resp = await client.get(
+                    f"https://{host}/api/v4/projects/{project_id}",
+                    timeout=10.0,
+                    follow_redirects=True,
+                )
+                if resp.status_code == 200:
+                    data = resp.json()
+                    stats["stars"] = data.get("star_count", stats["stars"])
+                    stats["archived"] = data.get("archived", stats["archived"])
+                    stats["default_branch"] = data.get("default_branch", "main")
+                    last_act = data.get("last_activity_at")
+                    if last_act:
+                        stats["last_commit"] = last_act.split("T")[0]
+                    if data.get("description") and (
+                        not cached_stats or not cached_stats.get("description")
                     ):
                         stats["description"] = data["description"].strip()
-                    if not cached_stats.get("name") or cached_stats.get("name") == repo:
-                        if data.get("name"):
-                            stats["name"] = data["name"].strip()
-                    if not cached_stats.get("genre"):
-                        topics = " ".join(data.get("topics", []))
-                        name_desc = f"{data.get('name', '')} {data.get('description', '')}"
-                        stats["genre"] = infer_genre(f"{name_desc} {topics}")
 
-                pushed_at = data.get("pushed_at")
-                if pushed_at:
-                    stats["last_commit"] = pushed_at.split("T")[0]
-            elif resp.status_code == 403:
-                console.print(
-                    f"[yellow]Rate limit for {owner}/{repo}. Using cached stats.[/yellow]"
+            elif "codeberg" in host or host in (
+                "teapot.informationsanarchistik.de",
+                "git.justquitstudios.de",
+                "git.harrault.fr",
+            ):
+                resp = await client.get(
+                    f"https://{host}/api/v1/repos/{owner}/{repo}",
+                    timeout=10.0,
+                    follow_redirects=True,
                 )
-            else:
-                console.print(
-                    f"[yellow]Failed {owner}/{repo} (HTTP {resp.status_code}). "
-                    "Cached stats kept.[/yellow]"
-                )
+                if resp.status_code == 200:
+                    data = resp.json()
+                    stats["stars"] = data.get("stars_count", stats["stars"])
+                    stats["archived"] = data.get("archived", stats["archived"])
+                    stats["default_branch"] = data.get("default_branch", "main")
+                    stats["language"] = data.get("language", stats["language"])
+                    updated_at = data.get("updated_at")
+                    if updated_at:
+                        stats["last_commit"] = updated_at.split("T")[0]
+                    if data.get("description") and (
+                        not cached_stats or not cached_stats.get("description")
+                    ):
+                        stats["description"] = data["description"].strip()
+
         except Exception as e:
-            console.print(f"[red]Error fetching {owner}/{repo}: {e}. Using cached stats.[/red]")
+            console.print(
+                f"[red]Error fetching {host}/{owner}/{repo}: {e}. Using cached stats.[/red]"
+            )
 
     return stats
 
 
 def generate_game_markdown_item(game: Dict[str, Any]) -> str:
-    """Generate Markdown bullet line for a single game."""
+    """Generate Markdown bullet line for a single game supporting GitHub, GitLab, Codeberg."""
     name = game.get("name", game["repo"])
-    url = f"https://github.com/{game['owner']}/{game['repo']}"
+    host = game.get("host", "github.com")
+    url = game.get("url") or f"https://{host}/{game['owner']}/{game['repo']}"
     desc = game.get("description", "").strip()
     tech = game.get("tech") or game.get("language") or "Android"
     stars_formatted = format_stars(game.get("stars", 0))
@@ -220,17 +271,23 @@ def add_game(
     tech: Optional[str] = None,
     genre: Optional[str] = None,
 ) -> None:
-    """Add or update a game repository in games.json."""
-    owner, repo = parse_github_url(url)
+    """Add or update a game repository in games.json (supports GitHub, GitLab, Codeberg)."""
+    owner, repo, host = parse_repo_url(url)
     if not owner or not repo:
-        console.print(f"[red]Error: Invalid GitHub repository URL or format: '{url}'[/red]")
+        console.print(f"[red]Error: Invalid repository URL or format: '{url}'[/red]")
         return
+    host = host or "github.com"
 
     games = load_games()
     for g in games:
-        if g["owner"].lower() == owner.lower() and g["repo"].lower() == repo.lower():
+        g_host = g.get("host", "github.com").lower()
+        if (
+            g_host == host.lower()
+            and g["owner"].lower() == owner.lower()
+            and g["repo"].lower() == repo.lower()
+        ):
             console.print(
-                f"[yellow]Game {owner}/{repo} already exists in games.json. "
+                f"[yellow]Game {host}/{owner}/{repo} already exists in games.json. "
                 "Updating details...[/yellow]"
             )
             if name:
@@ -242,28 +299,40 @@ def add_game(
             if genre:
                 g["genre"] = genre
             save_games_atomic([normalize_game_entry(item) for item in games])
-            console.print(f"[green]Successfully updated {owner}/{repo}![/green]")
+            console.print(f"[green]Successfully updated {host}/{owner}/{repo}![/green]")
             return
 
-    new_entry = normalize_game_entry(
-        {
-            "owner": owner,
-            "repo": repo,
-            "name": name or repo,
-            "description": desc or "Open-source Android game.",
-            "tech": tech or "Android",
-            "genre": genre,
-        }
-    )
+    new_data: Dict[str, Any] = {
+        "owner": owner,
+        "repo": repo,
+        "name": name or repo,
+        "description": desc or "Open-source Android game.",
+        "tech": tech or "Android",
+        "genre": genre,
+    }
+    if host != "github.com":
+        new_data["host"] = host
+
+    new_entry = normalize_game_entry(new_data)
     games.append(new_entry)
     save_games_atomic(games)
-    console.print(f"[green]Added {owner}/{repo} to games.json ({len(games)} total games)![/green]")
+    console.print(
+        f"[green]Added {host}/{owner}/{repo} to games.json ({len(games)} total games)![/green]"
+    )
 
 
 def get_sort_key(sort_mode: str) -> tuple[Callable[[Dict[str, Any]], Any], bool]:
     """Return sort key function and reverse boolean."""
     if sort_mode == "stars":
-        return lambda g: g.get("stars", 0), True
+        return (
+            lambda g: (
+                g.get("stars", 0),
+                g.get("last_commit")
+                if g.get("last_commit") not in (None, "N/A", "")
+                else "0000-00-00",
+            ),
+            True,
+        )
     elif sort_mode == "name":
         return lambda g: g.get("name", g["repo"]).lower(), False
     elif sort_mode == "genre":
@@ -271,7 +340,9 @@ def get_sort_key(sort_mode: str) -> tuple[Callable[[Dict[str, Any]], Any], bool]
     # Default: "updated"
     return (
         lambda g: (
-            g["last_commit"] if g.get("last_commit") not in (None, "N/A") else "0000-00-00",
+            g.get("last_commit")
+            if g.get("last_commit") not in (None, "N/A", "")
+            else "0000-00-00",
             g.get("stars", 0),
         ),
         True,
@@ -305,6 +376,7 @@ async def main_async(args: argparse.Namespace) -> None:
                 headers=headers,
                 sem=sem,
                 cached_stats=game,
+                host=game.get("host", "github.com"),
             )
             for game in games
         ]
@@ -370,9 +442,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Awesome Android Games - Stats Updater")
     parser.add_argument(
         "--sort",
-        choices=["updated", "stars", "name", "genre"],
-        default="updated",
-        help="Sorting criteria for games within categories or flat list (default: updated)",
+        choices=["stars", "updated", "name", "genre"],
+        default="stars",
+        help="Sorting criteria for games within categories or flat list (default: stars)",
     )
     parser.add_argument(
         "--flat",

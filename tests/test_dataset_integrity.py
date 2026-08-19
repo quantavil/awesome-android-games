@@ -46,7 +46,8 @@ class TestDatasetIntegrity:
         seen = set()
         duplicates = []
         for g in games:
-            slug = f"{g['owner'].lower()}/{g['repo'].lower()}"
+            host = g.get("host", "github.com").lower()
+            slug = f"{host}/{g['owner'].lower()}/{g['repo'].lower()}"
             if slug in seen:
                 duplicates.append(slug)
             seen.add(slug)
@@ -84,9 +85,10 @@ class TestReadmeSynchronization:
 
         content = README_PATH.read_text(encoding="utf-8")
         for g in games:
-            url_fragment = f"github.com/{g['owner']}/{g['repo']}"
+            host = g.get("host", "github.com")
+            url_fragment = f"{host}/{g['owner']}/{g['repo']}"
             assert url_fragment.lower() in content.lower(), (
-                f"Repository {g['owner']}/{g['repo']} missing from README.md"
+                f"Repository {host}/{g['owner']}/{g['repo']} missing from README.md"
             )
 
     def test_toc_anchor_links_match_gfm_headings(self):

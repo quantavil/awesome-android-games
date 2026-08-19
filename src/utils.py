@@ -21,90 +21,265 @@ README_PATH = ROOT_DIR / "README.md"
 
 GENRE_CATEGORIES: List[str] = [
     "Strategy & 4X",
-    "Roguelike & RPG",
+    "Roguelike & Dungeon Crawler",
+    "RPG & Adventure",
     "Sandbox & Simulation",
-    "Puzzle & Board",
-    "Arcade, Action & Racing",
-    "Casual & Adventure",
+    "Board & Card Games",
+    "Puzzle & Logic",
+    "Word, Trivia & Educational",
+    "Action & Arcade",
+    "Platformer & Runner",
+    "Racing & Sports",
+    "Rhythm & Music",
+    "Casual & Party",
 ]
 
 # Mapping rules from keywords / topics to canonical genres (ordered by specificity)
 GENRE_MAPPINGS: Dict[str, List[str]] = {
-    "Roguelike & RPG": [
+    "Strategy & 4X": [
+        "mindustry",
+        "unciv",
+        "wesnoth",
+        "vcmi",
+        "freeciv",
+        "settlers",
+        "civilization",
+        "4x",
+        "strategy",
+        "tower-defense",
+        "tower defense",
+        "tactics",
+        "rts",
+        "real-time strategy",
+        "heroes of might",
+        "anuto",
+        "cpudefense",
+        "latindefense",
+        "liquid wars",
+    ],
+    "Roguelike & Dungeon Crawler": [
         "pixel dungeon",
+        "dungeon crawl",
+        "crawl",
         "roguelike",
-        "rpg",
+        "hyperrogue",
+        "cataclysm",
         "dungeon",
         "crawler",
-        "quest",
-        "fantasy",
-        "cataclysm",
-        "turn-based rpg",
+        "rogue",
+        "nethack",
+        "angband",
+        "cavern cravers",
     ],
-    "Puzzle & Board": [
-        "puzzle",
-        "sudoku",
-        "minesweeper",
-        "chess",
-        "ludo",
-        "uno",
-        "card game",
-        "solitaire",
-        "board",
-        "word puzzle",
-        "knot",
-        "chain relations",
-        "tic tac toe",
-        "2048",
-        "tetris",
-        "15 puzzle",
-        "tangler",
-        "brain trainer",
-        "math trainer",
-        "focus",
+    "RPG & Adventure": [
+        "rpg",
+        "stendhal",
+        "flare",
+        "easyrpg",
+        "galgame",
+        "visual novel",
+        "idle fantasy",
+        "role-playing",
+        "quest",
+        "adventure game",
+        "interactive fiction",
+        "open-adventure",
+        "storygame",
+        "narrative",
     ],
     "Sandbox & Simulation": [
         "voxel",
         "sandbox",
         "simulation",
         "simulator",
+        "minetest",
+        "luanti",
+        "openttd",
+        "freeminer",
+        "principia",
+        "endless sky",
+        "simcity",
         "transport tycoon",
         "game of life",
+        "space flight",
+        "cuberite",
+        "gravity",
     ],
-    "Strategy & 4X": [
-        "civilization",
-        "4x",
-        "strategy",
-        "tower-defense",
-        "tower defense",
-        "automation",
-        "factory",
-        "tactics",
-        "rts",
-        "real-time strategy",
+    "Board & Card Games": [
+        "chess",
+        "lichess",
+        "sanmill",
+        "mill",
+        "solitaire",
+        "pysolfc",
+        "card game",
+        "card games",
+        "cards",
+        "board game",
+        "board games",
+        "gobandroid",
+        "go game",
+        "weiqi",
+        "baduk",
+        "blokus",
+        "freebloks",
+        "blokish",
+        "ludo",
+        "reversi",
+        "othello",
+        "checkers",
+        "halma",
+        "uno",
+        "mahjong",
+        "backgammon",
+        "battleship",
+        "dominoes",
+        "tic tac toe",
+        "tic-tac-toe",
+        "dooz",
+        "connect four",
+        "draughts",
+        "klondike",
+        "tarock",
+        "siete y media",
+        "hearts and spades",
     ],
-    "Arcade, Action & Racing": [
-        "racing",
+    "Word, Trivia & Educational": [
+        "word",
+        "trivia",
+        "crossword",
+        "anagram",
+        "boggle",
+        "scrabble",
+        "quiz",
+        "lexica",
+        "ahorcado",
+        "hangman",
+        "unjumble",
+        "wortmühle",
+        "kanji",
+        "filmfacts",
+        "guess",
+        "guesser",
+        "parlera",
+        "primary",
+        "math trainer",
+        "brain trainer",
+    ],
+    "Puzzle & Logic": [
+        "puzzle",
+        "sudoku",
+        "minesweeper",
+        "2048",
+        "tatham",
+        "rubik",
+        "logic",
+        "nonogram",
+        "picross",
+        "sokoban",
+        "tangram",
+        "jigsaw",
+        "sliding puzzle",
+        "15 puzzle",
+        "flowit",
+        "tessel",
+        "water sort",
+        "blockdrop",
+        "block blast",
+        "futoshiki",
+        "zebra puzzle",
+        "einstein",
+        "match-3",
+        "match 3",
+        "dropcount",
+        "drop7",
+        "hue spill",
+        "mastermind",
+        "maze",
+        "tangle",
+        "knot",
+        "pipe",
+    ],
+    "Rhythm & Music": [
+        "rhythm",
+        "piano",
+        "pianoli",
+        "singing",
+        "music",
+        "beat feet",
+        "synth",
+        "ultrastar",
+        "hitster",
+        "subster",
+        "instrument",
+    ],
+    "Racing & Sports": [
+        "supertuxkart",
         "kart",
-        "arcade",
-        "action",
-        "shooter",
-        "pinball",
-        "brick-breaking",
-        "brick blast",
+        "racing",
+        "race",
+        "golf",
+        "open-golf",
+        "skiing",
+        "snowboard",
+        "sports",
+        "football",
+        "soccer",
+        "hockey",
+        "billiards",
+        "pool game",
+        "rally",
+        "drift",
+        "dexterity",
+        "minigolf",
+    ],
+    "Platformer & Runner": [
         "platformer",
         "runner",
+        "thextech",
+        "mario",
+        "aaaaxy",
+        "pekka",
+        "jump",
+        "towerjumper",
         "flappy",
+        "parkour",
+        "side-scrolling",
+        "sidescroller",
+    ],
+    "Action & Arcade": [
+        "action",
+        "arcade",
+        "shooter",
+        "doom",
+        "quake",
+        "idtech",
+        "c-dogs",
+        "arkanoid",
+        "brick",
+        "breakout",
+        "pong",
+        "space invader",
+        "asteroids",
+        "bullet hell",
+        "shmup",
+        "fighting",
+        "beat em up",
+        "king pong",
+        "balloons",
+        "dodge",
+        "pinball",
         "retro arcade",
     ],
-    "Casual & Adventure": [
+    "Casual & Party": [
         "casual",
-        "adventure",
-        "story",
-        "visual novel",
-        "drifting",
-        "singing",
-        "rhythm",
+        "party",
+        "social deduction",
+        "mafia",
+        "mini-game",
+        "minigame",
+        "pet sim",
+        "idle",
     ],
 }
 
@@ -119,12 +294,15 @@ def github_slug(text: str) -> str:
 
 
 def infer_genre(text: str) -> str:
-    """Infer canonical genre from title, description, or topics."""
+    """Infer canonical genre from title, description, or topics using word boundaries."""
     text_lower = text.lower()
     for genre, keywords in GENRE_MAPPINGS.items():
-        if any(kw in text_lower for kw in keywords):
-            return genre
-    return "Casual & Adventure"
+        for kw in keywords:
+            # Word boundary matching for short terms / phrases to prevent false substring matches
+            pattern = rf"\b{re.escape(kw)}\b"
+            if re.search(pattern, text_lower):
+                return genre
+    return "Casual & Party"
 
 
 def format_stars(count: int) -> str:
@@ -142,45 +320,65 @@ def format_stars(count: int) -> str:
     return str(count)
 
 
-def parse_github_url(url: str) -> tuple[Optional[str], Optional[str]]:
-    """Extract owner and repo name from GitHub URL, SSH git path, or owner/repo string.
+def parse_repo_url(url: str) -> tuple[Optional[str], Optional[str], Optional[str]]:
+    """Extract owner, repo, and host from a Git repository URL (GitHub, GitLab, Codeberg).
 
     Supports:
     - https://github.com/owner/repo
-    - https://github.com/owner/repo.git
-    - https://github.com/owner/repo/
-    - https://github.com/owner/repo/tree/main
-    - git@github.com:owner/repo.git
-    - owner/repo
-    - owner/repo/
+    - https://gitlab.com/owner/repo
+    - https://codeberg.org/owner/repo
+    - git@github.com:owner/repo.git, git@gitlab.com:owner/repo.git, git@codeberg.org:owner/repo.git
+    - owner/repo (defaults host to github.com)
+
+    Returns:
+        tuple (owner, repo, host) or (None, None, None)
     """
     if not url:
-        return None, None
+        return None, None, None
 
     clean = url.strip()
 
-    # SSH pattern: git@github.com:owner/repo.git
-    ssh_match = re.match(r"^git@github\.com:([^/\s]+)/([^/\s#]+?)(?:\.git)?/?$", clean)
+    # SSH pattern: git@<host>:<owner>/<repo>.git
+    ssh_match = re.match(r"^git@([^:]+):([^/\s]+)/([^/\s#]+?)(?:\.git)?/?$", clean)
     if ssh_match:
-        return ssh_match.group(1), ssh_match.group(2).removesuffix(".git")
+        host = ssh_match.group(1).lower()
+        owner = ssh_match.group(2)
+        repo = ssh_match.group(3).removesuffix(".git")
+        return owner, repo, host
 
-    # HTTP/HTTPS URLs (strictly validate github.com hostname)
+    # HTTP/HTTPS URLs
     if clean.startswith("http://") or clean.startswith("https://"):
         parsed = urlparse(clean)
-        if parsed.netloc.lower() in ("github.com", "www.github.com"):
-            parts = [p for p in parsed.path.strip("/").split("/") if p]
-            if len(parts) >= 2:
-                owner = parts[0]
-                repo = parts[1].removesuffix(".git")
-                return owner, repo
-        return None, None
+        netloc = parsed.netloc.lower()
+        if netloc.startswith("www."):
+            netloc = netloc[4:]
+        # Filter out git branch/tree paths like /tree/main, /-/tree/master, /blob/
+        raw_parts = [p for p in parsed.path.strip("/").split("/") if p]
+        parts = []
+        for p in raw_parts:
+            if p in ("-", "tree", "blob", "src", "browse", "repository", "archive"):
+                break
+            parts.append(p)
+        if len(parts) >= 2:
+            owner = parts[0]
+            repo = parts[1].removesuffix(".git")
+            return owner, repo, netloc
+        return None, None, None
 
     # Plain owner/repo format (allowing trailing slashes / .git)
     clean_slug = clean.strip("/")
     parts = [p for p in clean_slug.split("/") if p]
     if len(parts) == 2 and not clean.startswith("http"):
-        return parts[0], parts[1].removesuffix(".git")
+        return parts[0], parts[1].removesuffix(".git"), "github.com"
 
+    return None, None, None
+
+
+def parse_github_url(url: str) -> tuple[Optional[str], Optional[str]]:
+    """Extract owner and repo name strictly from GitHub URL, SSH git path, or owner/repo string."""
+    owner, repo, host = parse_repo_url(url)
+    if host in ("github.com", "www.github.com"):
+        return owner, repo
     return None, None
 
 
@@ -261,12 +459,13 @@ def save_games_atomic(games: List[Dict[str, Any]], file_path: Path = GAMES_JSON_
 
 
 def normalize_game_entry(raw: Dict[str, Any]) -> Dict[str, Any]:
-    """Ensure standard keys and types exist for a game entry, preserving custom genres."""
+    """Ensure standard keys and types exist for a game entry, preserving custom genres and hosts."""
     raw = raw or {}
     owner = str(raw.get("owner") or "").strip()
     repo = str(raw.get("repo") or "").strip()
+    host = str(raw.get("host") or "github.com").strip().lower()
     name = str(raw.get("name") or repo or "Unknown").strip()
-    desc = str(raw.get("description") or "").strip()
+    desc = re.sub(r"\s+", " ", str(raw.get("description") or "")).strip()
     tech = str(raw.get("tech") or raw.get("language") or "Android").strip()
 
     # Trust explicit genre input if provided; otherwise infer from name + description
@@ -281,7 +480,7 @@ def normalize_game_entry(raw: Dict[str, Any]) -> Dict[str, Any]:
     except (ValueError, TypeError):
         stars = 0
 
-    return {
+    entry: Dict[str, Any] = {
         "owner": owner,
         "repo": repo,
         "name": name,
@@ -295,3 +494,9 @@ def normalize_game_entry(raw: Dict[str, Any]) -> Dict[str, Any]:
         "archived": bool(raw.get("archived", False)),
         "language": str(raw.get("language") or tech.split("/")[0].strip()),
     }
+    if host and host != "github.com":
+        entry["host"] = host
+    elif "host" in raw and raw["host"]:
+        entry["host"] = raw["host"]
+
+    return entry
