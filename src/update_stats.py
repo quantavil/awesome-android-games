@@ -30,6 +30,7 @@ from utils import (  # noqa: E402
     get_github_headers,
     get_github_token,
     github_slug,
+    infer_genre,
     load_games,
     normalize_game_entry,
     parse_github_url,
@@ -76,6 +77,21 @@ async def fetch_repo_stats_async(
                     if spdx != "NOASSERTION":
                         stats["license"] = spdx
                 stats["default_branch"] = data.get("default_branch", "main")
+
+                # Auto-fill missing/placeholder metadata directly from GitHub
+                if cached_stats:
+                    curr_desc = cached_stats.get("description", "")
+                    if (not curr_desc or curr_desc == "Open-source Android game.") and data.get(
+                        "description"
+                    ):
+                        stats["description"] = data["description"].strip()
+                    if not cached_stats.get("name") or cached_stats.get("name") == repo:
+                        if data.get("name"):
+                            stats["name"] = data["name"].strip()
+                    if not cached_stats.get("genre"):
+                        topics = " ".join(data.get("topics", []))
+                        name_desc = f"{data.get('name', '')} {data.get('description', '')}"
+                        stats["genre"] = infer_genre(f"{name_desc} {topics}")
 
                 pushed_at = data.get("pushed_at")
                 if pushed_at:

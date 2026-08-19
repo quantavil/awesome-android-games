@@ -12,28 +12,26 @@ Before submitting a new game, please ensure:
 
 ## Adding a Game
 
-### Option 1: Using the `uv` updater CLI (Recommended)
+### Option 1: 1-Command Auto-Fetch (Easiest)
+Simply provide the GitHub repository URL. The tool automatically extracts the name, description, primary language, license, stars, and infers the category:
 ```bash
-uv run python src/update_stats.py --add "https://github.com/owner/repo" --desc "Brief 1-sentence description" --tech "Kotlin / LibGDX" --genre "Strategy & 4X"
+uv run python src/update_stats.py --add "https://github.com/owner/repo"
 ```
-This automatically formats and adds the game to `games.json`, fetches its live GitHub stats, and updates `README.md`.
+*(Optional flags `--desc`, `--tech`, `--genre` can be passed if you wish to override auto-detected metadata).*
 
 ### Option 2: Editing `games.json` directly
-Add your entry into `games.json`:
+Append your entry to `games.json`:
 ```json
 {
   "owner": "owner",
-  "repo": "repo",
-  "name": "Game Name",
-  "description": "Brief 1-sentence description.",
-  "genre": "Strategy & 4X",
-  "tech": "Kotlin / LibGDX"
+  "repo": "repo"
 }
 ```
 Then run:
 ```bash
 uv run python src/update_stats.py
 ```
+The updater will automatically fill in the stars, description, tech stack, and update `README.md`.
 
 ## Pull Request Process
 

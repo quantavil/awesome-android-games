@@ -2,8 +2,8 @@ name: Update Game Stats
 
 on:
   schedule:
-    # Run every Monday at 00:00 UTC
-    - cron: '0 0 * * 1'
+    # Run every Sunday at 03:27 UTC (off-peak low-load window)
+    - cron: '27 3 * * 0'
   workflow_dispatch:
 
 concurrency:
