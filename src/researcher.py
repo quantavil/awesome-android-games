@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -67,13 +68,17 @@ GAME_KEYWORDS = {
     "trainer",
     "singing",
     "rhythm",
+    "solitaire",
+    "minesweeper",
+    "mahjong",
+    "shmup",
 }
 
-# Negative keywords to filter out non-game utility apps
+# Negative keywords to filter out non-game utility and companion apps
 NON_GAME_KEYWORDS = {
-    "music-player",
-    "audio-player",
-    "video-player",
+    "music player",
+    "audio player",
+    "video player",
     "downloader",
     "browser",
     "launcher",
@@ -83,11 +88,33 @@ NON_GAME_KEYWORDS = {
     "keyboard",
     "messenger",
     "social",
-    "file-manager",
+    "file manager",
     "backup",
     "camera",
     "comic",
     "translation",
+    "companion",
+    "tracker",
+    "calculator",
+    "guide",
+    "wiki",
+    "cheat",
+    "cheats",
+    "soundboard",
+    "mod manager",
+    "save editor",
+    "savegame",
+    "save file",
+    "emulator",
+    "remote",
+    "controller",
+    "plugin",
+    "wrapper",
+    "scorekeeper",
+    "leaderboard",
+    "benchmark",
+    "status bar",
+    "overlay",
 }
 
 
@@ -98,19 +125,27 @@ def load_existing_repos() -> set[str]:
 
 
 def is_game(repo_item: Dict[str, Any]) -> bool:
-    """Heuristic check to ensure the repository is actually a game."""
+    """Heuristic check to ensure the repository is actually a game and not a utility/tool."""
     name = str(repo_item.get("name") or "").lower()
     desc = str(repo_item.get("description") or "").lower()
     topics = [str(t).lower() for t in repo_item.get("topics", [])]
-    combined_text = f"{name} {desc} {' '.join(topics)}"
+    raw_combined = f"{name} {desc} {' '.join(topics)}"
+    combined = re.sub(r"[-_]", " ", raw_combined)
 
-    has_non_game_match = any(w in combined_text for w in NON_GAME_KEYWORDS)
-    has_game_match = any(w in combined_text for w in GAME_KEYWORDS)
+    # If any non-game keyword matches (e.g. launcher, companion, wallpaper, wiki, cheat), reject
+    for kw in NON_GAME_KEYWORDS:
+        pattern = rf"\b{re.escape(kw)}\b"
+        if re.search(pattern, combined) or re.search(pattern, raw_combined):
+            return False
 
-    if has_non_game_match and not has_game_match:
-        return False
+    # Check for presence of genuine game keywords
+    for kw in GAME_KEYWORDS:
+        kw_norm = kw.replace("-", " ")
+        pattern = rf"\b{re.escape(kw_norm)}\b"
+        if re.search(pattern, combined) or re.search(rf"\b{re.escape(kw)}\b", raw_combined):
+            return True
 
-    return has_game_match
+    return False
 
 
 async def check_release_apk_async(
@@ -399,7 +434,11 @@ async def main_async(args: argparse.Namespace) -> None:
             f"[bold green]✓ Added {len(new_qualifying_games)} new games to games.json![/bold green]"
         )
         console.print("[cyan]Running update_stats.py to refresh README.md...[/cyan]")
-        subprocess.run(["uv", "run", "python", "src/update_stats.py"], cwd=ROOT_DIR, check=False)
+        subprocess.run(
+            [sys.executable, str(ROOT_DIR / "src" / "update_stats.py")],
+            cwd=ROOT_DIR,
+            check=False,
+        )
 
 
 def main() -> None:

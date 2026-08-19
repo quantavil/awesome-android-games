@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://awesome.re"><img src="https://awesome.re/badge-flat2.svg" alt="Awesome" /></a>
-  <!-- TOTAL_GAMES_COUNT --><a href="#games-list"><img src="https://img.shields.io/badge/Games-266-3ddc84.svg?style=flat-square" alt="Tracked Games" /></a><!-- /TOTAL_GAMES_COUNT -->
+  <!-- TOTAL_GAMES_COUNT --><a href="#games-list"><img src="https://img.shields.io/badge/Games-253-3ddc84.svg?style=flat-square" alt="Tracked Games" /></a><!-- /TOTAL_GAMES_COUNT -->
   <!-- LAST_UPDATED --><a href="#games-list"><img src="https://img.shields.io/badge/Updated-2026--08--19-blueviolet.svg?style=flat-square" alt="Last Updated" /></a><!-- /LAST_UPDATED -->
   <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" /></a>
 </p>
@@ -20,18 +20,18 @@
 <!-- GAMES_LIST_START -->
 ### Categories
 
-- [Strategy & 4X](#strategy--4x) (13)
-- [Roguelike & Dungeon Crawler](#roguelike--dungeon-crawler) (16)
+- [Strategy & 4X](#strategy--4x) (12)
+- [Roguelike & Dungeon Crawler](#roguelike--dungeon-crawler) (13)
 - [RPG & Adventure](#rpg--adventure) (9)
 - [Sandbox & Simulation](#sandbox--simulation) (9)
-- [Board & Card Games](#board--card-games) (39)
-- [Puzzle & Logic](#puzzle--logic) (54)
-- [Word, Trivia & Educational](#word-trivia--educational) (17)
-- [Action & Arcade](#action--arcade) (17)
+- [Board & Card Games](#board--card-games) (38)
+- [Puzzle & Logic](#puzzle--logic) (52)
+- [Word, Trivia & Educational](#word-trivia--educational) (16)
+- [Action & Arcade](#action--arcade) (15)
 - [Platformer & Runner](#platformer--runner) (15)
 - [Racing & Sports](#racing--sports) (4)
 - [Rhythm & Music](#rhythm--music) (4)
-- [Casual & Party](#casual--party) (69)
+- [Casual & Party](#casual--party) (66)
 
 ---
 
@@ -61,8 +61,6 @@
   - ⭐ **7** · Last updated: `2026-03-11` · `Godot`
 - **[Dima Defense ⚔️](https://codeberg.org/xolatgames/Dima-Defense)** : A simple Tower Defense game that was made in LibGDX
   - ⭐ **5** · Last updated: `2026-08-17` · `Strategy Game` · `Apache-2.0`
-- **[Liquid Wars OS](https://github.com/xenris/liquid-wars-android)** : A remake of the open source game Liquid War, for the Android OS.
-  - ⭐ **3** · Last updated: `2026-04-07` · `C++` · `MIT`
 
 ### Roguelike & Dungeon Crawler
 
@@ -88,16 +86,10 @@
   - ⭐ **43** · Last updated: `2023-10-11` · `Java`
 - **[Brogue CE Android](https://github.com/tyrannotorus/c-brogue-ce-android)** : Brogue: Community Edition - a modern android port of the much-loved minimalist roguelike game.
   - ⭐ **21** · Last updated: `2026-08-12` · `C / SDL` · `AGPL-3.0`
-- **[Revengate](https://gitlab.com/ygingras/revengate)** : A steampunk roguelike dungeon crawling game.
-  - ⭐ **16** · Last updated: `2025-01-04` · `Role-Playing Game` · `GPL-3.0-or-later`
 - **[Pixel Spacebase](https://github.com/codefitz/Pixel-Spacebase)** : Space-themed sci-fi roguelike RPG based on Shattered Pixel Dungeon.
   - ⭐ **11** · Last updated: `2026-06-05` · `Java / LibGDX` · `GPL-3.0`
 - **[VitalSlayer](https://github.com/P8-QS/VitalSlayer)** : Health-driven mobile dungeon crawler using Health Connect on Android.
   - ⭐ **11** · Last updated: `2025-05-27` · `C# / Unity` · `MIT`
-- **[Meritous](https://gitlab.com/meritous/sdl_android)** : Dungeon crawl game
-  - ⭐ **3** · Last updated: `2018-11-28` · `Role-Playing Game` · `GPL-3.0-or-later`
-- **[Cavern Cravers](https://github.com/mlm-games/cavern-cravers)** : A roguelike turn-based virtual board game.
-  - ⭐ **2** · Last updated: `2026-07-20` · `Godot` · `GPL-3.0`
 
 ### RPG & Adventure
 
@@ -215,8 +207,6 @@
   - ⭐ **6** · Last updated: `2021-08-10` · `Java` · `GPL-3.0`
 - **[Navy Fleet Battle](https://github.com/tigrino/navy-fleet-battle)** : Battleship game.
   - ⭐ **4** · Last updated: `2026-07-30` · `Kotlin` · `MIT`
-- **[Siete y media](https://github.com/Webierta/siete_media)** : Clásico juego de la baraja española 'Las siete y media'.
-  - ⭐ **3** · Last updated: `2021-01-12` · `Flutter / Dart` · `GPL-3.0`
 - **[Collective Club Maze](https://gitlab.com/andsild/collective-club-maze)** : A game similar to the board game ricochet robots.
   - ⭐ **2** · Last updated: `2026-06-03` · `Board Game` · `GPL-3.0-or-later`
 - **[Boxcars](https://codeberg.org/tslocum/boxcars-android)** : Play backgammon online via bgammon.org
@@ -328,10 +318,6 @@
   - ⭐ **4** · Last updated: `2026-01-07` · `Java` · `MIT`
 - **[Sudaku - Pattern-driven sudoku](https://codeberg.org/theoden8/sudaku)** : Find patterns to solve sudoku - your sudoku workhorse handles the grunt work
   - ⭐ **3** · Last updated: `2026-06-09` · `Puzzle Game` · `MIT`
-- **[Block Blast](https://github.com/sidhant947/BlockBlast)** : A minimal, privacy-focused block puzzle game built with Flutter.
-  - ⭐ **2** · Last updated: `2026-08-03` · `Flutter / Dart` · `GPL-3.0`
-- **[Box Stacker](https://gitlab.com/box-stacker/box-stacker-mobile)** : Box Stacker is a physics-based construction puzzle game.
-  - ⭐ **1** · Last updated: `2026-05-24` · `Puzzle Game` · `AGPL-3.0-or-later`
 
 ### Word, Trivia & Educational
 
@@ -367,8 +353,6 @@
   - ⭐ **6** · Last updated: `2021-04-16` · `Flutter / Dart` · `GPL-3.0`
 - **[Wortmühle](https://github.com/bhuepping/wortmuehle)** : Wortmühle — tägliches deutsches Wort-Puzzle, komplett offline (Android/Capacitor).
   - ⭐ **2** · Last updated: `2026-07-16` · `Python / Kivy` · `GPL-3.0`
-- **[FilmFacts](https://github.com/jlynchsd/FilmFacts)** : Fun trivia game for cinema enthusiasts.
-  - ⭐ **2** · Last updated: `2025-02-16` · `Kotlin` · `Apache-2.0`
 
 ### Action & Arcade
 
@@ -400,12 +384,8 @@
   - ⭐ **7** · Last updated: `2026-07-25` · `HTML` · `GPL-3.0`
 - **[Cat a shooter 😼](https://codeberg.org/xolatgames/cat-a-shooter)** : Fly in the space by the cat 😼, and shoots off from enemies 🛸
   - ⭐ **5** · Last updated: `2026-06-26` · `Shooter Game` · `Apache-2.0`
-- **[Dodge](https://github.com/dozingcat/dodge-android)** : Guide a ball to safety avoiding swarms of enemies.
-  - ⭐ **5** · Last updated: `2022-04-14` · `Java` · `GPL-3.0`
-- **[Critical Velocity](https://gitlab.com/alaskalinuxuser/app_critical_velocity)** : Side scrolling arcade style game
-  - ⭐ **2** · Last updated: `2026-06-14` · `Action Game` · `Apache-2.0`
 - **[Anarch RE](https://git.sr.ht/~marcin-serwin/anarch-re-android)** : Public domain from-scratch suckless Doom clone
-  - ⭐ **0** · Last updated: `2026-05-04` · `Shooter Game` · `CC0-1.0`
+  - ⭐ **0** · Last updated: `2026-05-04` · `C / Suckless` · `CC0-1.0`
 
 ### Platformer & Runner
 
@@ -586,18 +566,12 @@
   - ⭐ **5** · Last updated: `2026-08-18` · `Educational Game` · `AGPL-3.0-only`
 - **[Collect the Cookies!](https://codeberg.org/MysticJungle/collect-the-cookies)** : Collect cookies in this fun idle-ish game
   - ⭐ **5** · Last updated: `2026-04-16` · `Casual Game` · `CC0-1.0`
-- **[Tux Math](https://gitlab.com/Afrikalan/tuxmath-android)** : A very fun game to learn tables and practice calculation.
-  - ⭐ **5** · Last updated: `2025-03-02` · `Educational Game` · `AGPL-3.0-only`
-- **[Caramelos](https://github.com/luarca84/Caramelos)** : Caramelos is an Android Game made with Libgdx.
-  - ⭐ **5** · Last updated: `2017-11-08` · `Java` · `MIT`
 - **[Blidraughts](https://github.com/vovagorodok/blidraughts)** : Fork of lidraughts.org mobile application with Bluetooth e-boards support.
   - ⭐ **4** · Last updated: `2026-05-12` · `TypeScript / Web` · `GPL-3.0`
 - **[Pocket Broomball](https://codeberg.org/dulvui/pocket-broomball)** : The world's first Broomball video game with 100+ real world teams!
   - ⭐ **3** · Last updated: `2025-11-08` · `Sport Game` · `AGPL-3.0-or-later`
 - **[Snakes](https://gitlab.com/mir06/snakes)** : Make your way through an extended version of Snake with computer-controlled oppo
   - ⭐ **3** · Last updated: `2025-08-11` · `Action Game` · `GPL-3.0-or-later`
-- **[Virus Attack](https://gitlab.com/anstue/virus-attack)** : Defend a body cell against viruses
-  - ⭐ **3** · Last updated: `2020-04-13` · `Action Game` · `AGPL-3.0-or-later`
 - **[1010! Klooni](https://codeberg.org/Lonami/Klooni1010)** : A libGDX game based on 1010
   - ⭐ **2** · Last updated: `2026-02-11` · `Puzzle Game` · `GPL-3.0-or-later`
 - **[Tile Match](https://gitlab.com/infrared-developer/tile-match)** : Match, tap, and clear your way to victory!

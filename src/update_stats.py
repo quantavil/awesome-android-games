@@ -14,6 +14,7 @@ import re
 import sys
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
+from urllib.parse import quote
 
 import httpx
 from rich.console import Console
@@ -110,7 +111,7 @@ async def fetch_repo_stats_async(
                     )
 
             elif "gitlab" in host or host in ("invent.kde.org", "gitlab.wikimedia.org"):
-                project_id = f"{owner}%2F{repo}"
+                project_id = quote(f"{owner}/{repo}", safe="")
                 resp = await client.get(
                     f"https://{host}/api/v4/projects/{project_id}",
                     timeout=10.0,
@@ -195,7 +196,7 @@ def generate_markdown_list(games: List[Dict[str, Any]], grouped: bool = True) ->
     category_map: Dict[str, List[Dict[str, Any]]] = {genre: [] for genre in GENRE_CATEGORIES}
 
     for game in games:
-        genre = game.get("genre") or "Casual & Adventure"
+        genre = game.get("genre") or "Casual & Party"
         if genre not in category_map:
             category_map[genre] = []
         category_map[genre].append(game)

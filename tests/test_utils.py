@@ -3,6 +3,7 @@
 import stat
 from pathlib import Path
 
+from researcher import is_game
 from update_stats import generate_markdown_list
 from utils import (
     atomic_write_json,
@@ -211,3 +212,55 @@ class TestMarkdownGeneration:
         md = generate_markdown_list([normalized], grouped=True)
         assert "Rhythm & Music" in md
         assert "Rhythm Beats" in md
+
+
+class TestGameHeuristic:
+    def test_genuine_games_pass(self):
+        assert is_game({
+            "name": "Pixel Dungeon",
+            "description": "Roguelike RPG game",
+            "topics": ["android", "game"],
+        })
+        assert is_game({
+            "name": "Mindustry",
+            "description": "A sandbox tower-defense factory automation game",
+            "topics": ["libgdx"],
+        })
+        assert is_game({
+            "name": "Unciv",
+            "description": "Open-source 4X civilization-building strategy game",
+            "topics": ["kotlin"],
+        })
+
+    def test_non_game_tools_and_companions_rejected(self):
+        # Game companion / wiki / cheats / wallpapers / launcher / tracker
+        assert not is_game({
+            "name": "Game Launcher",
+            "description": "Android game launcher for retro games",
+            "topics": ["android", "game"],
+        })
+        assert not is_game({
+            "name": "Game Wallpaper",
+            "description": "HD wallpapers for games",
+            "topics": ["android", "game", "wallpaper"],
+        })
+        assert not is_game({
+            "name": "RPG Companion",
+            "description": "Companion app and score tracker for tabletop rpg games",
+            "topics": ["rpg"],
+        })
+        assert not is_game({
+            "name": "Minesweeper Calculator",
+            "description": "Probability calculator for minesweeper games",
+            "topics": ["puzzle"],
+        })
+        assert not is_game({
+            "name": "Game Mod Manager",
+            "description": "Mod manager for mobile games",
+            "topics": ["game"],
+        })
+        assert not is_game({
+            "name": "Video Player",
+            "description": "Simple video player app",
+            "topics": ["android"],
+        })

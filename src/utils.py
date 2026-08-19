@@ -55,7 +55,6 @@ GENRE_MAPPINGS: Dict[str, List[str]] = {
         "anuto",
         "cpudefense",
         "latindefense",
-        "liquid wars",
     ],
     "Roguelike & Dungeon Crawler": [
         "pixel dungeon",
@@ -69,7 +68,6 @@ GENRE_MAPPINGS: Dict[str, List[str]] = {
         "rogue",
         "nethack",
         "angband",
-        "cavern cravers",
     ],
     "RPG & Adventure": [
         "rpg",
