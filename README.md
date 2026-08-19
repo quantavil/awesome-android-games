@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://awesome.re"><img src="https://awesome.re/badge-flat2.svg" alt="Awesome" /></a>
-  <!-- TOTAL_GAMES_COUNT --><a href="#games-list"><img src="https://img.shields.io/badge/Games-51-3ddc84.svg?style=flat-square" alt="Tracked Games" /></a><!-- /TOTAL_GAMES_COUNT -->
+  <!-- TOTAL_GAMES_COUNT --><a href="#games-list"><img src="https://img.shields.io/badge/Games-52-3ddc84.svg?style=flat-square" alt="Tracked Games" /></a><!-- /TOTAL_GAMES_COUNT -->
   <!-- LAST_UPDATED --><a href="#games-list"><img src="https://img.shields.io/badge/Updated-2026--08--19-00e5ff.svg?style=flat-square" alt="Last Updated" /></a><!-- /LAST_UPDATED -->
   <a href="https://github.com/astral-sh/uv"><img src="https://img.shields.io/badge/uv-powered-blueviolet.svg?style=flat-square" alt="Powered by uv" /></a>
   <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" /></a>
@@ -25,7 +25,7 @@
 - [Strategy & 4X](#strategy-4x) (6)
 - [Roguelike & RPG](#roguelike-rpg) (13)
 - [Sandbox & Simulation](#sandbox-simulation) (3)
-- [Puzzle & Board](#puzzle-board) (18)
+- [Puzzle & Board](#puzzle-board) (19)
 - [Arcade, Action & Racing](#arcade-action-racing) (8)
 - [Casual & Adventure](#casual-adventure) (3)
 
@@ -33,12 +33,12 @@
 
 ### Strategy & 4X
 
+- **[Unciv](https://github.com/yairm210/Unciv)** — Open-source 4X civilization-building strategy game, inspired by Civ V.
+  - `Kotlin / LibGDX` · ⭐ **11.1k** · Last updated: `2026-08-19` · `MPL-2.0`
 - **[Freeciv](https://github.com/freeciv/freeciv)** — Turn-based empire-building strategy game inspired by the history of human civilization.
   - `C` · ⭐ **1.6k** · Last updated: `2026-08-19` · `GPL-2.0`
 - **[Mindustry](https://github.com/Anuken/Mindustry)** — A sandbox tower-defense factory automation game with endless resource management.
   - `Java / LibGDX` · ⭐ **28.7k** · Last updated: `2026-08-18` · `GPL-3.0`
-- **[Unciv](https://github.com/yairm210/Unciv)** — Open-source 4X civilization-building strategy game, inspired by Civ V.
-  - `Kotlin / LibGDX` · ⭐ **11.1k** · Last updated: `2026-08-18` · `MPL-2.0`
 - **[CPU Defense](https://github.com/ochadenas/cpudefense)** — A tactical tower defense game for Android based on a microprocessor architecture theme.
   - `Kotlin` · ⭐ **201** · Last updated: `2026-08-15` · `MIT`
 - **[FeudalTactics](https://github.com/Sesu8642/FeudalTactics)** — Turn-based tactical strategy game with procedurally generated challenges.
@@ -86,6 +86,8 @@
 
 ### Puzzle & Board
 
+- **[Braincup](https://github.com/SimonSchubert/Braincup)** — Open-source memory, focus, and math brain training game built with Kotlin Multiplatform.
+  - `Kotlin / Compose Multiplatform` · ⭐ **265** · Last updated: `2026-08-18` · `Apache-2.0`
 - **[gauguin](https://github.com/meikpiep/gauguin)** — Sudoku-like number puzzle game for Android based on arithmetic logic.
   - `Kotlin` · ⭐ **210** · Last updated: `2026-08-18` · `GPL-3.0`
 - **[Puzzle Suite](https://github.com/sidhant947/Puzzle)** — A suite of 270+ minimalist puzzle games built with Flutter for Android.

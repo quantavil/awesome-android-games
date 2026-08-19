@@ -712,5 +712,19 @@
     "default_branch": "main",
     "archived": false,
     "language": "C#"
+  },
+  {
+    "owner": "SimonSchubert",
+    "repo": "Braincup",
+    "name": "Braincup",
+    "description": "Open-source memory, focus, and math brain training game built with Kotlin Multiplatform.",
+    "genre": "Puzzle & Board",
+    "tech": "Kotlin / Compose Multiplatform",
+    "stars": 265,
+    "last_commit": "2026-08-18",
+    "license": "Apache-2.0",
+    "default_branch": "master",
+    "archived": false,
+    "language": "Kotlin"
   }
 ]

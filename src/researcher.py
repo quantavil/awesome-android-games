@@ -167,6 +167,11 @@ async def search_android_games_async(
         "godot-android",
         "roguelike android",
     ]
+    dual_topics = [
+        "android topic:game",
+        "android topic:puzzle",
+        "android topic:rpg",
+    ]
     keywords = [
         '"android game"',
         '"open source android game"',
@@ -179,16 +184,19 @@ async def search_android_games_async(
         '"card game" android',
         '"minesweeper" android',
         '"chess" android game',
+        '"brain trainer" android',
         '"flame" flutter game android',
         '"pixel dungeon"',
     ]
 
-    queries = [
-        f"topic:{t} pushed:>{pushed_after} stars:>={min_stars} fork:false" for t in topics
-    ] + [
-        f"{kw} in:description pushed:>{pushed_after} stars:>={min_stars} fork:false"
-        for kw in keywords
-    ]
+    queries = (
+        [f"topic:{t} pushed:>{pushed_after} stars:>={min_stars} fork:false" for t in topics]
+        + [f"topic:{t} pushed:>{pushed_after} stars:>={min_stars} fork:false" for t in dual_topics]
+        + [
+            f"{kw} in:description pushed:>{pushed_after} stars:>={min_stars} fork:false"
+            for kw in keywords
+        ]
+    )
 
     seen_repos = set()
     candidate_repos = []
