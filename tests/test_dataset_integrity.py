@@ -2,10 +2,8 @@
 
 import json
 import re
-from pathlib import Path
 
-GAMES_JSON_PATH = Path("games.json")
-README_PATH = Path("README.md")
+from utils import GAMES_JSON_PATH, GENRE_CATEGORIES, README_PATH, github_slug
 
 
 class TestDatasetIntegrity:
@@ -90,3 +88,14 @@ class TestReadmeSynchronization:
             assert url_fragment.lower() in content.lower(), (
                 f"Repository {g['owner']}/{g['repo']} missing from README.md"
             )
+
+    def test_toc_anchor_links_match_gfm_headings(self):
+        """Ensure all TOC links match exact GitHub-rendered heading slugs."""
+        content = README_PATH.read_text(encoding="utf-8")
+        for genre in GENRE_CATEGORIES:
+            heading = f"### {genre}"
+            if heading in content:
+                expected_anchor = f"(#{github_slug(genre)})"
+                assert expected_anchor in content, (
+                    f"TOC link for '{genre}' does not match expected GFM anchor '{expected_anchor}'"
+                )

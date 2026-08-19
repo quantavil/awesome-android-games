@@ -22,12 +22,12 @@
 <!-- GAMES_LIST_START -->
 ### Categories
 
-- [Strategy & 4X](#strategy-4x) (6)
-- [Roguelike & RPG](#roguelike-rpg) (13)
-- [Sandbox & Simulation](#sandbox-simulation) (3)
-- [Puzzle & Board](#puzzle-board) (20)
-- [Arcade, Action & Racing](#arcade-action-racing) (11)
-- [Casual & Adventure](#casual-adventure) (4)
+- [Strategy & 4X](#strategy--4x) (6)
+- [Roguelike & RPG](#roguelike--rpg) (13)
+- [Sandbox & Simulation](#sandbox--simulation) (3)
+- [Puzzle & Board](#puzzle--board) (20)
+- [Arcade, Action & Racing](#arcade-action--racing) (11)
+- [Casual & Adventure](#casual--adventure) (4)
 
 ---
 

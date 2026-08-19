@@ -13,7 +13,7 @@ import datetime
 import re
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional
 
 import httpx
 from rich.console import Console
@@ -29,6 +29,7 @@ from utils import (  # noqa: E402
     format_stars,
     get_github_headers,
     get_github_token,
+    github_slug,
     load_games,
     normalize_game_entry,
     parse_github_url,
@@ -118,7 +119,7 @@ def generate_game_markdown_item(game: Dict[str, Any]) -> str:
 
 
 def generate_markdown_list(games: List[Dict[str, Any]], grouped: bool = True) -> str:
-    """Generate Markdown representation of games list, either grouped by genre or flat."""
+    """Generate Markdown representation of games list, dynamically preserving all categories."""
     if not grouped:
         return "\n".join(generate_game_markdown_item(g) for g in games)
 
@@ -132,9 +133,15 @@ def generate_markdown_list(games: List[Dict[str, Any]], grouped: bool = True) ->
             category_map[genre] = []
         category_map[genre].append(game)
 
-    active_genres = [g for g in GENRE_CATEGORIES if category_map.get(g)]
+    # Active genres: canonical in predefined order, then any custom categories sorted alphabetically
+    canonical_active = [g for g in GENRE_CATEGORIES if category_map.get(g)]
+    custom_active = sorted(
+        [g for g in category_map if g not in GENRE_CATEGORIES and category_map[g]]
+    )
+    active_genres = canonical_active + custom_active
+
     for genre in active_genres:
-        slug = genre.lower().replace(" & ", "-").replace(", ", "-").replace(" ", "-")
+        slug = github_slug(genre)
         count = len(category_map[genre])
         toc_lines.append(f"- [{genre}](#{slug}) ({count})")
 
@@ -218,7 +225,7 @@ def add_game(
                 g["tech"] = tech
             if genre:
                 g["genre"] = genre
-            save_games_atomic(games)
+            save_games_atomic([normalize_game_entry(item) for item in games])
             console.print(f"[green]Successfully updated {owner}/{repo}![/green]")
             return
 
@@ -235,6 +242,24 @@ def add_game(
     games.append(new_entry)
     save_games_atomic(games)
     console.print(f"[green]Added {owner}/{repo} to games.json ({len(games)} total games)![/green]")
+
+
+def get_sort_key(sort_mode: str) -> tuple[Callable[[Dict[str, Any]], Any], bool]:
+    """Return sort key function and reverse boolean."""
+    if sort_mode == "stars":
+        return lambda g: g.get("stars", 0), True
+    elif sort_mode == "name":
+        return lambda g: g.get("name", g["repo"]).lower(), False
+    elif sort_mode == "genre":
+        return lambda g: (g.get("genre", ""), g.get("stars", 0)), True
+    # Default: "updated"
+    return (
+        lambda g: (
+            g.get("last_commit", "0000-00-00") if g.get("last_commit") != "N/A" else "0000-00-00",
+            g.get("stars", 0),
+        ),
+        True,
+    )
 
 
 async def main_async(args: argparse.Namespace) -> None:
@@ -279,23 +304,9 @@ async def main_async(args: argparse.Namespace) -> None:
     normalized_games = [normalize_game_entry(g) for g in games]
     save_games_atomic(normalized_games)
 
-    # Sorting
-    if args.sort == "updated":
-        normalized_games.sort(
-            key=lambda g: (
-                g.get("last_commit", "0000-00-00")
-                if g.get("last_commit") != "N/A"
-                else "0000-00-00",
-                g.get("stars", 0),
-            ),
-            reverse=True,
-        )
-    elif args.sort == "stars":
-        normalized_games.sort(key=lambda g: g.get("stars", 0), reverse=True)
-    elif args.sort == "name":
-        normalized_games.sort(key=lambda g: g.get("name", g["repo"]).lower())
-    elif args.sort == "genre":
-        normalized_games.sort(key=lambda g: (g.get("genre", ""), g.get("stars", 0)), reverse=True)
+    # Apply sorting globally and within category groups
+    sort_key, reverse_order = get_sort_key(args.sort)
+    normalized_games.sort(key=sort_key, reverse=reverse_order)
 
     # Display preview table in console
     table = Table(title="Awesome Android Games - Live Stats")
@@ -320,9 +331,8 @@ async def main_async(args: argparse.Namespace) -> None:
 
     console.print(table)
 
-    # Generate Markdown
-    grouped_mode = not args.flat and args.sort != "stars" and args.sort != "name"
-    markdown_list = generate_markdown_list(normalized_games, grouped=grouped_mode)
+    # Generate Markdown (grouped mode unless --flat is explicitly passed)
+    markdown_list = generate_markdown_list(normalized_games, grouped=not args.flat)
 
     if args.dry_run:
         console.print("\n[bold]Generated Markdown Output:[/bold]\n")
@@ -346,12 +356,12 @@ def main() -> None:
         "--sort",
         choices=["updated", "stars", "name", "genre"],
         default="updated",
-        help="Sorting criteria for the list (default: updated)",
+        help="Sorting criteria for games within categories or flat list (default: updated)",
     )
     parser.add_argument(
         "--flat",
         action="store_true",
-        help="Generate a flat list instead of categorizing by genre",
+        help="Generate a single flat list instead of categorizing by genre",
     )
     parser.add_argument(
         "--add",

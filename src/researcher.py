@@ -25,6 +25,7 @@ from rich.table import Table
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from utils import (  # noqa: E402
+    ROOT_DIR,
     format_stars,
     get_github_headers,
     get_github_token,
@@ -63,6 +64,9 @@ GAME_KEYWORDS = {
     "sandbox",
     "voxel",
     "visual-novel",
+    "trainer",
+    "singing",
+    "rhythm",
 }
 
 # Negative keywords to filter out non-game utility apps
@@ -82,6 +86,8 @@ NON_GAME_KEYWORDS = {
     "file-manager",
     "backup",
     "camera",
+    "comic",
+    "translation",
 }
 
 
@@ -93,9 +99,9 @@ def load_existing_repos() -> set[str]:
 
 def is_game(repo_item: Dict[str, Any]) -> bool:
     """Heuristic check to ensure the repository is actually a game."""
-    name = (repo_item.get("name") or "").lower()
-    desc = (repo_item.get("description") or "").lower()
-    topics = [t.lower() for t in repo_item.get("topics", [])]
+    name = str(repo_item.get("name") or "").lower()
+    desc = str(repo_item.get("description") or "").lower()
+    topics = [str(t).lower() for t in repo_item.get("topics", [])]
     combined_text = f"{name} {desc} {' '.join(topics)}"
 
     has_non_game_match = any(w in combined_text for w in NON_GAME_KEYWORDS)
@@ -118,7 +124,7 @@ async def check_release_apk_async(
 
     Returns:
         (has_apk, release_tag, download_url)
-        has_apk is None if rate-limited or API failure occurs.
+        has_apk is None if rate-limited, network error, or 5xx occurs (unverified).
     """
     releases_url = f"https://api.github.com/repos/{owner}/{repo}/releases"
     async with sem:
@@ -132,10 +138,13 @@ async def check_release_apk_async(
                     tag = rel.get("tag_name", "")
                     assets = rel.get("assets", [])
                     for asset in assets:
-                        name = asset.get("name", "").lower()
+                        name = str(asset.get("name") or "").lower()
                         if name.endswith(".apk"):
                             download_url = asset.get("browser_download_url")
                             return True, tag, download_url
+                return False, None, None
+            elif resp.status_code == 404:
+                # Confirmed no releases exist
                 return False, None, None
             elif resp.status_code == 403:
                 reset_time = resp.headers.get("x-ratelimit-reset", "unknown")
@@ -144,11 +153,15 @@ async def check_release_apk_async(
                     f"(reset: {reset_time}).[/yellow]"
                 )
                 return None, None, None
+            else:
+                # 500, 502, 503, etc. -> unverified
+                console.print(
+                    f"[yellow]HTTP {resp.status_code} checking releases for {owner}/{repo}[/yellow]"
+                )
+                return None, None, None
         except Exception as e:
-            console.print(f"[red]Error checking releases for {owner}/{repo}: {e}[/red]")
+            console.print(f"[red]Network error checking releases for {owner}/{repo}: {e}[/red]")
             return None, None, None
-
-    return False, None, None
 
 
 async def search_android_games_async(
@@ -216,7 +229,7 @@ async def search_android_games_async(
             if resp.status_code == 200:
                 items = resp.json().get("items", [])
                 for item in items:
-                    full_name = item.get("full_name", "").lower()
+                    full_name = str(item.get("full_name") or "").lower()
                     if full_name and full_name not in seen_repos:
                         seen_repos.add(full_name)
                         if is_game(item):
@@ -285,7 +298,7 @@ async def main_async(args: argparse.Namespace) -> None:
             repo = item["name"]
             full_name = f"{owner}/{repo}".lower()
             stars = item.get("stargazers_count", 0)
-            pushed_at = (item.get("pushed_at") or "")[:10]
+            pushed_at = str(item.get("pushed_at") or "")[:10]
             language = item.get("language") or "Android"
             desc = item.get("description") or "Open-source Android game"
             license_info = (item.get("license") or {}).get("spdx_id") or "Unknown"
@@ -333,7 +346,7 @@ async def main_async(args: argparse.Namespace) -> None:
         if res["has_apk"] is True:
             apk_str = f"✓ {res['release_tag']}"
         elif res["has_apk"] is None:
-            apk_str = "[yellow]Unverified (403)[/yellow]"
+            apk_str = "[yellow]Unverified[/yellow]"
         else:
             apk_str = "[dim]No APK[/dim]"
 
@@ -382,7 +395,7 @@ async def main_async(args: argparse.Namespace) -> None:
             f"[bold green]✓ Added {len(new_qualifying_games)} new games to games.json![/bold green]"
         )
         console.print("[cyan]Running update_stats.py to refresh README.md...[/cyan]")
-        subprocess.run(["uv", "run", "python", "src/update_stats.py"], check=False)
+        subprocess.run(["uv", "run", "python", "src/update_stats.py"], cwd=ROOT_DIR, check=False)
 
 
 def main() -> None:
@@ -409,9 +422,9 @@ def main() -> None:
     )
     parser.add_argument(
         "--require-apk",
-        action="store_true",
+        action=argparse.BooleanOptionalAction,
         default=True,
-        help="Require downloadable .apk file in GitHub releases (default: True)",
+        help="Require downloadable .apk file in GitHub releases (use --no-require-apk to disable)",
     )
     parser.add_argument(
         "--auto-add",

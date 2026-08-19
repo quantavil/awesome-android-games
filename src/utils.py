@@ -1,7 +1,7 @@
 """Shared utilities for Awesome Android Games.
 
 Provides atomic file IO, robust GitHub URL parsing, API authentication,
-star formatting, and dataset normalization.
+star formatting, GFM slug generation, and dataset normalization.
 """
 
 from __future__ import annotations
@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import stat
 import subprocess
 import tempfile
 from pathlib import Path
@@ -60,6 +61,9 @@ GENRE_MAPPINGS: Dict[str, List[str]] = {
         "15 puzzle",
         "tangler",
         "gauguin",
+        "brain trainer",
+        "math trainer",
+        "focus",
     ],
     "Sandbox & Simulation": [
         "voxel",
@@ -96,6 +100,8 @@ GENRE_MAPPINGS: Dict[str, List[str]] = {
         "brick blast",
         "platformer",
         "runner",
+        "flappy",
+        "sonic",
         "retro game arcade",
     ],
     "Casual & Adventure": [
@@ -105,8 +111,19 @@ GENRE_MAPPINGS: Dict[str, List[str]] = {
         "visual novel",
         "capybara",
         "drifting",
+        "singing",
+        "rhythm",
     ],
 }
+
+
+def github_slug(text: str) -> str:
+    """Generate exact GitHub Flavored Markdown (GFM) header anchor slug."""
+    text = text.lower()
+    # Strip all characters except word characters, whitespace, and hyphens
+    text = re.sub(r"[^\w\s-]", "", text)
+    # Replace space characters with hyphens
+    return re.sub(r" ", "-", text)
 
 
 def infer_genre(text: str) -> str:
@@ -125,7 +142,8 @@ def format_stars(count: int) -> str:
     except (ValueError, TypeError):
         return "0"
 
-    if count >= 1_000_000:
+    # Avoid boundary rounding artifact where 999_950 formats to '1000.0k'
+    if count >= 999_950:
         return f"{count / 1_000_000:.1f}M"
     if count >= 1_000:
         return f"{count / 1_000:.1f}k"
@@ -154,10 +172,10 @@ def parse_github_url(url: str) -> tuple[Optional[str], Optional[str]]:
     if ssh_match:
         return ssh_match.group(1), ssh_match.group(2).removesuffix(".git")
 
-    # HTTP/HTTPS URLs
+    # HTTP/HTTPS URLs (strictly validate github.com hostname)
     if clean.startswith("http://") or clean.startswith("https://"):
         parsed = urlparse(clean)
-        if "github.com" in parsed.netloc.lower():
+        if parsed.netloc.lower() in ("github.com", "www.github.com"):
             parts = [p for p in parsed.path.strip("/").split("/") if p]
             if len(parts) >= 2:
                 owner = parts[0]
@@ -168,7 +186,7 @@ def parse_github_url(url: str) -> tuple[Optional[str], Optional[str]]:
     # Plain owner/repo format (allowing trailing slashes / .git)
     clean_slug = clean.strip("/")
     parts = [p for p in clean_slug.split("/") if p]
-    if len(parts) == 2:
+    if len(parts) == 2 and not clean.startswith("http"):
         return parts[0], parts[1].removesuffix(".git")
 
     return None, None
@@ -207,10 +225,17 @@ def get_github_headers(token: Optional[str] = None) -> Dict[str, str]:
 
 
 def atomic_write_text(file_path: Path, content: str, encoding: str = "utf-8") -> None:
-    """Atomically write text content to file using temp file and rename."""
+    """Atomically write text content to file using temp file, preserving 0o644 permissions."""
     file_path = Path(file_path)
     parent = file_path.parent
     parent.mkdir(parents=True, exist_ok=True)
+
+    current_mode = None
+    if file_path.exists():
+        try:
+            current_mode = stat.S_IMODE(file_path.stat().st_mode)
+        except OSError:
+            current_mode = None
 
     with tempfile.NamedTemporaryFile(
         mode="w",
@@ -222,6 +247,12 @@ def atomic_write_text(file_path: Path, content: str, encoding: str = "utf-8") ->
         temp_file.flush()
         os.fsync(temp_file.fileno())
         temp_path = Path(temp_file.name)
+
+    mode_to_set = current_mode if current_mode is not None else 0o644
+    try:
+        os.chmod(temp_path, mode_to_set)
+    except OSError:
+        pass
 
     os.replace(temp_path, file_path)
 
@@ -246,13 +277,26 @@ def save_games_atomic(games: List[Dict[str, Any]], file_path: Path = GAMES_JSON_
 
 
 def normalize_game_entry(raw: Dict[str, Any]) -> Dict[str, Any]:
-    """Ensure standard keys and types exist for a game entry."""
-    owner = raw.get("owner", "").strip()
-    repo = raw.get("repo", "").strip()
-    name = raw.get("name") or repo
-    desc = raw.get("description", "").strip()
-    tech = raw.get("tech") or raw.get("language") or "Android"
-    genre = raw.get("genre") or infer_genre(f"{name} {desc}")
+    """Ensure standard keys and types exist for a game entry, defensively handling None."""
+    raw = raw or {}
+    owner = str(raw.get("owner") or "").strip()
+    repo = str(raw.get("repo") or "").strip()
+    name = str(raw.get("name") or repo or "Unknown").strip()
+    desc = str(raw.get("description") or "").strip()
+    tech = str(raw.get("tech") or raw.get("language") or "Android").strip()
+
+    raw_genre = raw.get("genre")
+    if raw_genre and raw_genre in GENRE_CATEGORIES:
+        genre = raw_genre
+    elif raw_genre:
+        genre = infer_genre(f"{raw_genre} {name} {desc}")
+    else:
+        genre = infer_genre(f"{name} {desc}")
+
+    try:
+        stars = int(raw.get("stars", 0))
+    except (ValueError, TypeError):
+        stars = 0
 
     return {
         "owner": owner,
@@ -261,10 +305,10 @@ def normalize_game_entry(raw: Dict[str, Any]) -> Dict[str, Any]:
         "description": desc,
         "genre": genre,
         "tech": tech,
-        "stars": int(raw.get("stars", 0)),
-        "last_commit": raw.get("last_commit", "N/A"),
-        "license": raw.get("license", "Unknown"),
-        "default_branch": raw.get("default_branch", "main"),
+        "stars": stars,
+        "last_commit": str(raw.get("last_commit") or "N/A"),
+        "license": str(raw.get("license") or "Unknown"),
+        "default_branch": str(raw.get("default_branch") or "main"),
         "archived": bool(raw.get("archived", False)),
-        "language": raw.get("language") or tech.split("/")[0].strip(),
+        "language": str(raw.get("language") or tech.split("/")[0].strip()),
     }
