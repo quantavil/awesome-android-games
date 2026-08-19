@@ -1,0 +1,65 @@
+name: ✏️ Update Game Metadata
+description: Suggest corrections or updates to an existing game's metadata (genre, tech stack, description, URL).
+title: "[Update Metadata]: <Game Name>"
+labels: ["game-update", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to correct inaccurate metadata, recategorize genres, update tech stacks/engines, or fix broken URLs.
+
+  - type: input
+    id: repo_url
+    attributes:
+      label: Game Repository URL
+      description: The repository URL or slug currently in the catalog.
+      placeholder: https://github.com/owner/repository
+    validations:
+      required: true
+
+  - type: dropdown
+    id: genre
+    attributes:
+      label: Updated Genre (Optional)
+      description: Leave untouched if no change.
+      options:
+        - "No change"
+        - "Strategy & 4X"
+        - "Roguelike & Dungeon Crawler"
+        - "RPG & Adventure"
+        - "Sandbox & Simulation"
+        - "Board & Card Games"
+        - "Puzzle & Logic"
+        - "Word, Trivia & Educational"
+        - "Action & Arcade"
+        - "Platformer & Runner"
+        - "Racing & Sports"
+        - "Rhythm & Music"
+        - "Casual & Party"
+    validations:
+      required: false
+
+  - type: input
+    id: tech
+    attributes:
+      label: Updated Tech Stack / Engine (Optional)
+      placeholder: e.g. Godot / C#, LibGDX, Kotlin
+    validations:
+      required: false
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Updated Description (Optional)
+      placeholder: Better 1-2 sentence description.
+    validations:
+      required: false
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Explanation / Context
+      description: Briefly explain why this update is needed.
+      placeholder: The game engine migrated from Java to Godot...
+    validations:
+      required: false

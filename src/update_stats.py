@@ -322,6 +322,38 @@ def add_game(
     )
 
 
+def remove_game(url: str) -> bool:
+    """Remove a game repository from games.json (supports GitHub, GitLab, Codeberg)."""
+    owner, repo, host = parse_repo_url(url)
+    if not owner or not repo:
+        console.print(f"[red]Error: Invalid repository URL or format: '{url}'[/red]")
+        return False
+    host = host or "github.com"
+
+    games = load_games()
+    initial_len = len(games)
+    filtered = [
+        g
+        for g in games
+        if not (
+            g.get("host", "github.com").lower() == host.lower()
+            and g["owner"].lower() == owner.lower()
+            and g["repo"].lower() == repo.lower()
+        )
+    ]
+
+    if len(filtered) == initial_len:
+        console.print(f"[yellow]Game {host}/{owner}/{repo} not found in games.json.[/yellow]")
+        return False
+
+    save_games_atomic([normalize_game_entry(item) for item in filtered])
+    console.print(
+        f"[green]Removed {host}/{owner}/{repo} from games.json "
+        f"({len(filtered)} total games)![/green]"
+    )
+    return True
+
+
 def get_sort_key(sort_mode: str) -> tuple[Callable[[Dict[str, Any]], Any], bool]:
     """Return sort key function and reverse boolean."""
     if sort_mode == "stars":
@@ -354,6 +386,10 @@ async def main_async(args: argparse.Namespace) -> None:
     """Asynchronous entry point for stats updater."""
     if args.add:
         add_game(args.add, name=args.name, desc=args.desc, tech=args.tech, genre=args.genre)
+    elif args.remove:
+        if not remove_game(args.remove):
+            console.print(f"[red]Could not remove '{args.remove}'.[/red]")
+            return
 
     games = load_games()
     if not games:
@@ -456,6 +492,11 @@ def main() -> None:
         "--add",
         type=str,
         help="Add a new game by GitHub URL or owner/repo (e.g., https://github.com/Anuken/Mindustry)",
+    )
+    parser.add_argument(
+        "--remove",
+        type=str,
+        help="Remove a game by repository URL or owner/repo (e.g., https://github.com/owner/repo)",
     )
     parser.add_argument("--name", type=str, help="Game display name (used with --add)")
     parser.add_argument("--desc", type=str, help="Game description (used with --add)")

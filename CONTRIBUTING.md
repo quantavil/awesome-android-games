@@ -10,11 +10,15 @@ We welcome submissions, metadata improvements, corrections, and removals to keep
 
 - [Submission & Quality Guidelines](#submission--quality-guidelines)
 - [Supported Git Forges](#supported-git-forges)
-- [Adding a Game](#adding-a-game)
-- [Editing or Updating a Game](#editing-or-updating-a-game)
-- [Requesting a Game Removal](#requesting-a-game-removal)
+- [How to Contribute](#how-to-contribute)
+  - [Pathway A: GitHub Issues (Easiest)](#pathway-a-github-issues-easiest)
+  - [Pathway B: Pull Requests (Fast-Tracked)](#pathway-b-pull-requests-fast-tracked)
+- [CLI Tools & Commands](#cli-tools--commands)
+  - [Adding / Updating Games](#adding--updating-games)
+  - [Removing Games](#removing-games)
+- [Maintainer IssueOps Automation](#maintainer-issueops-automation)
 - [Pull Request Process](#pull-request-process)
-- [Automated Validation](#automated-validation)
+- [Automated Validation & CI](#automated-validation--ci)
 
 ---
 
@@ -40,84 +44,71 @@ The project natively tracks and fetches live statistics (stars, descriptions, la
 
 ---
 
-## Adding a Game
+## How to Contribute
 
-### Option 1: CLI Auto-Fetch (Recommended)
+### Pathway A: GitHub Issues (Easiest)
+
+No local setup or programming required! You can use our structured issue templates:
+
+- **[Suggest a New Game](https://github.com/quantavil/awesome-android-games/issues/new?template=add-game.yml)**: Provide the repository URL, engine/tech stack, and game details.
+- **[Update Game Metadata](https://github.com/quantavil/awesome-android-games/issues/new?template=update-game.yml)**: Fix descriptions, recategorize genres, or update URLs.
+- **[Request Game Removal](https://github.com/quantavil/awesome-android-games/issues/new?template=remove-game.yml)**: Report defunct, closed-source, or unplayable entries.
+
+### Pathway B: Pull Requests (Fast-Tracked)
+
+If you'd like your changes merged directly:
+
+1. Fork this repository and clone locally.
+2. Use the CLI tool or edit [`games.json`](games.json).
+3. Run test and lint checks (`uv run pytest && uv run ruff check .`).
+4. Submit a Pull Request.
+
+---
+
+## CLI Tools & Commands
+
+### Adding / Updating Games
 
 You can pass a repository URL from any supported Git host. The updater will automatically extract the name, description, primary language, license, live star count, and infer the genre:
 
 ```bash
-# GitHub
+# Auto-fetch metadata and add/update game
 uv run python src/update_stats.py --add "https://github.com/owner/repo"
 
-# GitLab
-uv run python src/update_stats.py --add "https://gitlab.com/owner/repo"
-
-# Codeberg
-uv run python src/update_stats.py --add "https://codeberg.org/owner/repo"
+# Optional overrides
+uv run python src/update_stats.py --add "https://gitlab.com/owner/repo" \
+  --name "My Awesome Game" \
+  --genre "Strategy & 4X" \
+  --tech "Kotlin / LibGDX" \
+  --desc "A tactical turn-based strategy game."
 ```
 
-> **Optional CLI Flags**: Override or specify metadata manually if desired:
-> ```bash
-> uv run python src/update_stats.py --add "https://gitlab.com/owner/repo" \
->   --name "My Awesome Game" \
->   --genre "Strategy & 4X" \
->   --tech "Kotlin / LibGDX" \
->   --desc "A tactical turn-based strategy game."
-> ```
+### Removing Games
 
-### Option 2: Editing `games.json` Directly
+To remove a game from the dataset and regenerate the list:
 
-Add an entry to [`games.json`](games.json):
-
-```json
-{
-  "owner": "owner",
-  "repo": "repo",
-  "name": "Game Name",
-  "host": "gitlab.com",
-  "genre": "Strategy & 4X",
-  "tech": "Kotlin / LibGDX",
-  "description": "A tactical turn-based strategy game."
-}
-```
-
-*(Note: `"host"` defaults to `"github.com"` if omitted. For GitLab, Codeberg, or custom hosts, specify `"host"`).*
-
-After updating `games.json`, run the sync script to update `README.md` and refresh stats:
 ```bash
-uv run python src/update_stats.py
+# Remove by repository URL or slug
+uv run python src/update_stats.py --remove "https://github.com/owner/repo"
 ```
 
 ---
 
-## Editing or Updating a Game
+## Maintainer IssueOps Automation
 
-To edit or update existing game metadata (e.g. updating description, recategorizing genre, correcting engine/tech stack, or fixing URL):
+Maintainers can automatically process community issues using GitHub Actions IssueOps:
 
-1. Run the `--add` command with the same repository URL and the updated flags:
-   ```bash
-   uv run python src/update_stats.py --add "https://github.com/owner/repo" \
-     --genre "Puzzle & Logic" \
-     --tech "Godot / C#"
-   ```
-2. Or directly edit the matching item in [`games.json`](games.json), then run `uv run python src/update_stats.py`.
+### Comment Commands
+Comment directly on any submission issue:
+- `/add` — Adds the game using the issue form's repository URL and metadata.
+- `/add <url> [--genre <genre>] [--tech <tech>]` — Adds a game with explicit parameters.
+- `/remove` — Removes the game cited in the removal request issue.
+- `/remove <url>` — Removes a specific game URL.
 
----
-
-## Requesting a Game Removal
-
-If a game should be removed from the list:
-
-- **Reasons for removal**:
-  - The repository has become proprietary, private, or deleted.
-  - The project is an unplayable or abandoned minimal demo / assignment.
-  - The entry is a non-game utility (tracker, companion app, calculator, scorekeeper).
-  - Explicit removal request by the original repository owner/author.
-
-- **How to request removal**:
-  1. **Via Pull Request**: Remove the game object from [`games.json`](games.json), run `uv run python src/update_stats.py` to regenerate `README.md`, and submit a PR explaining the reason.
-  2. **Via Issue**: Open an Issue on GitHub citing the game repository and the reason for removal.
+### Label Triggers
+Applying the following labels will automatically execute the action, sync `README.md`, run tests, commit to `main`, and close the issue:
+- `approved-add`
+- `approved-remove`
 
 ---
 
@@ -145,10 +136,11 @@ If a game should be removed from the list:
 
 ---
 
-## Automated Validation
+## Automated Validation & CI
 
-Every Pull Request automatically runs CI checks to ensure:
+Every Pull Request and IssueOps run automatically executes CI checks:
 - JSON schema validity and deduplication in `games.json`.
 - Markdown link and Table of Contents synchronization with `README.md`.
 - Accurate multi-forge repository parsing across GitHub, GitLab, and Codeberg.
 - Code style and lint passing with zero errors (`ruff check`).
+- Full pytest test suite execution.

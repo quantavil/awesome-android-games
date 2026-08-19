@@ -1,0 +1,118 @@
+name: IssueOps Game Automation
+
+on:
+  issue_comment:
+    types: [created]
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  issueops:
+    # Trigger if:
+    # 1. Comment starts with /add or /remove by repo collaborator/member/owner
+    # 2. Issue labeled with approved-add or approved-remove
+    if: >-
+      (github.event_name == 'issue_comment' &&
+       startsWith(github.event.comment.body, '/') &&
+       contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association)) ||
+      (github.event_name == 'issues' &&
+       contains(fromJSON('["approved-add", "approved-remove"]'), github.event.label.name))
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Execute IssueOps Handler
+        id: handler
+        run: |
+          OUTPUT=$(uv run python src/issueops_handler.py --event-path "$GITHUB_EVENT_PATH")
+          echo "output<<EOF" >> $GITHUB_OUTPUT
+          echo "$OUTPUT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Sync README and Live Stats
+        if: steps.handler.outcome == 'success'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          uv run python src/update_stats.py
+
+      - name: Run Integrity Tests & Linter
+        if: steps.handler.outcome == 'success'
+        run: |
+          uv run pytest
+          uv run ruff check .
+
+      - name: Commit & Push Changes
+        id: commit_push
+        if: steps.handler.outcome == 'success'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add games.json README.md
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            git commit -m "chore(catalog): auto-update games via IssueOps [skip ci]"
+            git pull --rebase origin main || true
+            git push
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Comment on Issue & Close
+        if: always() && steps.handler.conclusion != 'skipped'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issue_number = context.issue.number;
+            let handlerOutput = {};
+            try {
+              handlerOutput = JSON.parse(process.env.HANDLER_OUTPUT || '{}');
+            } catch (e) {
+              handlerOutput = { success: false, message: 'An unexpected error occurred during IssueOps processing.' };
+            }
+            const message = handlerOutput.message || 'IssueOps processing completed.';
+            
+            const commentBody = `🤖 **IssueOps Automation:**\n\n${message}\n\nThank you for contributing to **Awesome Android Games**! ✨`;
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue_number,
+              body: commentBody
+            });
+
+            if (handlerOutput.success) {
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue_number,
+                state: 'closed',
+                state_reason: 'completed'
+              });
+            }
+        env:
+          HANDLER_OUTPUT: ${{ steps.handler.outputs.output }}

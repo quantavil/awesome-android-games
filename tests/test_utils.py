@@ -4,7 +4,7 @@ import stat
 from pathlib import Path
 
 from researcher import is_game
-from update_stats import generate_markdown_list
+from update_stats import add_game, generate_markdown_list, remove_game
 from utils import (
     atomic_write_json,
     atomic_write_text,
@@ -264,3 +264,67 @@ class TestGameHeuristic:
             "description": "Simple video player app",
             "topics": ["android"],
         })
+
+
+class TestAddAndRemoveGame:
+    def test_add_and_remove_game_lifecycle(self, monkeypatch, tmp_path: Path):
+        fake_games_file = tmp_path / "games.json"
+        initial_data = [
+            {
+                "owner": "test-owner",
+                "repo": "test-game",
+                "name": "Test Game",
+                "genre": "Strategy & 4X",
+                "tech": "Kotlin",
+                "description": "A test game.",
+                "stars": 10,
+                "last_commit": "2026-01-01",
+                "license": "MIT",
+                "default_branch": "main",
+                "archived": False,
+                "language": "Kotlin",
+            }
+        ]
+        save_games_atomic(initial_data, fake_games_file)
+
+        # Patch load_games and save_games_atomic to use fake_games_file
+        monkeypatch.setattr("update_stats.load_games", lambda: load_games(fake_games_file))
+        monkeypatch.setattr(
+            "update_stats.save_games_atomic",
+            lambda games: save_games_atomic(games, fake_games_file),
+        )
+
+        # 1. Add new game
+        add_game(
+            "https://github.com/new-owner/new-game",
+            name="New Game",
+            desc="Another game",
+            tech="Java",
+            genre="Puzzle & Logic",
+        )
+        games_after_add = load_games(fake_games_file)
+        assert len(games_after_add) == 2
+        assert any(g["repo"] == "new-game" for g in games_after_add)
+
+        # 2. Update existing game
+        add_game(
+            "https://github.com/new-owner/new-game",
+            name="New Game Updated",
+        )
+        games_after_update = load_games(fake_games_file)
+        assert len(games_after_update) == 2
+        new_entry = next(g for g in games_after_update if g["repo"] == "new-game")
+        assert new_entry["name"] == "New Game Updated"
+
+        # 3. Remove non-existing game
+        res_false = remove_game("https://github.com/nonexistent/game")
+        assert res_false is False
+        assert len(load_games(fake_games_file)) == 2
+
+        # 4. Remove existing game
+        res_true = remove_game("https://github.com/new-owner/new-game")
+        assert res_true is True
+        games_after_remove = load_games(fake_games_file)
+        assert len(games_after_remove) == 1
+        assert not any(g["repo"] == "new-game" for g in games_after_remove)
+

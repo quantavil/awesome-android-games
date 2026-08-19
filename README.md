@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://awesome.re"><img src="https://awesome.re/badge-flat2.svg" alt="Awesome" /></a>
-  <!-- TOTAL_GAMES_COUNT --><a href="#games-list"><img src="https://img.shields.io/badge/Games-253-3ddc84.svg?style=flat-square" alt="Tracked Games" /></a><!-- /TOTAL_GAMES_COUNT -->
+  <!-- TOTAL_GAMES_COUNT --><a href="#games-list"><img src="https://img.shields.io/badge/Games-252-3ddc84.svg?style=flat-square" alt="Tracked Games" /></a><!-- /TOTAL_GAMES_COUNT -->
   <!-- LAST_UPDATED --><a href="#games-list"><img src="https://img.shields.io/badge/Updated-2026--08--19-blueviolet.svg?style=flat-square" alt="Last Updated" /></a><!-- /LAST_UPDATED -->
   <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" /></a>
 </p>
@@ -25,7 +25,7 @@
 - [RPG & Adventure](#rpg--adventure) (9)
 - [Sandbox & Simulation](#sandbox--simulation) (9)
 - [Board & Card Games](#board--card-games) (38)
-- [Puzzle & Logic](#puzzle--logic) (52)
+- [Puzzle & Logic](#puzzle--logic) (51)
 - [Word, Trivia & Educational](#word-trivia--educational) (16)
 - [Action & Arcade](#action--arcade) (15)
 - [Platformer & Runner](#platformer--runner) (15)
@@ -38,13 +38,13 @@
 ### Strategy & 4X
 
 - **[Mindustry](https://github.com/Anuken/Mindustry)** : A sandbox tower-defense factory automation game with endless resource management.
-  - ⭐ **28.7k** · Last updated: `2026-08-18` · `Java / LibGDX` · `GPL-3.0`
+  - ⭐ **28.7k** · Last updated: `2026-08-19` · `Java / LibGDX` · `GPL-3.0`
 - **[Unciv](https://github.com/yairm210/Unciv)** : Open-source 4X civilization-building strategy game, inspired by Civ V.
   - ⭐ **11.1k** · Last updated: `2026-08-19` · `Kotlin / LibGDX` · `MPL-2.0`
 - **[The Battle for Wesnoth](https://github.com/wesnoth/wesnoth)** : An open source, turn-based strategy game with a high fantasy theme.
   - ⭐ **6.8k** · Last updated: `2026-08-19` · `C++` · `GPL-2.0`
 - **[VCMI](https://github.com/vcmi/vcmi)** : Open-source engine for Heroes of Might and Magic III.
-  - ⭐ **5.8k** · Last updated: `2026-08-18` · `C++` · `GPL-2.0`
+  - ⭐ **5.8k** · Last updated: `2026-08-19` · `C++` · `GPL-2.0`
 - **[Freeciv](https://github.com/freeciv/freeciv)** : Turn-based empire-building strategy game inspired by the history of human civilization.
   - ⭐ **1.6k** · Last updated: `2026-08-19` · `C` · `GPL-2.0`
 - **[Anuto TD](https://github.com/mjaun/android-anuto)** : A minimalist, tactical tower defense game for Android with clean vector aesthetics.
@@ -214,8 +214,6 @@
 
 ### Puzzle & Logic
 
-- **[2048 Android](https://github.com/uberspot/2048-android)** : Clean, smooth native Android open-source edition of the viral 2048 puzzle game.
-  - ⭐ **1.1k** · Last updated: `2024-08-11` · `Java / HTML5` · `MIT`
 - **[Antimine](https://github.com/lucasnlm/antimine-android)** : Clean, modern, open-source minesweeper puzzle game with customizable boards.
   - ⭐ **786** · Last updated: `2025-08-02` · `Kotlin` · `GPL-3.0`
 - **[Simon Tatham's Puzzles](https://github.com/chrisboyle/sgtpuzzles)** : Android port of Simon Tatham's Puzzles.
@@ -225,7 +223,7 @@
 - **[Tetris Android](https://github.com/sandwwraith/tetris)** : Classic block puzzle game built with Kotlin and custom Android Views.
   - ⭐ **480** · Last updated: `2024-03-12` · `Kotlin` · `Apache-2.0`
 - **[2048 Open Fun Game](https://github.com/andstatus/game2048)** : 2048 Open Fun Game - multiplatform implementation in Kotlin and KorGE game engine.
-  - ⭐ **350** · Last updated: `2026-07-19` · `Kotlin` · `Apache-2.0`
+  - ⭐ **351** · Last updated: `2026-07-19` · `Kotlin` · `Apache-2.0`
 - **[AAAAXY](https://github.com/divVerent/aaaaxy)** : A nonlinear 2D puzzle platformer taking place in impossible spaces.
   - ⭐ **297** · Last updated: `2026-08-18` · `Go / Ebitengine` · `Apache-2.0`
 - **[Klooni1010](https://github.com/LonamiWebs/Klooni1010)** *(Archived)* : Open-source 1010 block puzzle game built with LibGDX for Android.
@@ -282,10 +280,10 @@
   - ⭐ **23** · Last updated: `2026-07-22` · `Java` · `GPL-3.0`
 - **[9P](https://github.com/tube42/9p)** : The Nine Puzzle.
   - ⭐ **23** · Last updated: `2023-04-23` · `Java` · `GPL-2.0`
+- **[Queens](https://github.com/sidhant947/queens)** : It is a challenging crown-placement logic puzzle game where you place queens on a grid of colored regions built using Flutter.
+  - ⭐ **16** · Last updated: `2026-08-18` · `Flutter / Dart` · `GPL-3.0`
 - **[Sokoban(g)](https://github.com/obfusk/sokobang)** : Sokobang - sokoban puzzle w/ bigbang.coffee.
   - ⭐ **16** · Last updated: `2023-12-16` · `HTML` · `AGPL-3.0`
-- **[Queens](https://github.com/sidhant947/queens)** : It is a challenging crown-placement logic puzzle game where you place queens on a grid of colored regions built using Flutter.
-  - ⭐ **15** · Last updated: `2026-08-18` · `Flutter / Dart` · `GPL-3.0`
 - **[Zoysii - Logic game](https://gitlab.com/deepdaikon/Zoysii)** : A simple logic game: find the best path to delete every number in a square space
   - ⭐ **13** · Last updated: `2025-02-01` · `Puzzle Game` · `GPL-3.0-or-later`
 - **[IED](https://codeberg.org/Krixec/IED-FDroid)** : Imagine Minesweeper ... but in 3D
@@ -322,7 +320,7 @@
 ### Word, Trivia & Educational
 
 - **[MA Word Maker](https://github.com/vayun-mathur/Modern-Apps)** : A full mobile ecosystem of 36 apps
-  - ⭐ **726** · Last updated: `2026-08-19` · `Kotlin` · `GPL-3.0`
+  - ⭐ **728** · Last updated: `2026-08-19` · `Kotlin` · `GPL-3.0`
 - **[Lexica](https://github.com/lexica/lexica)** : Word Game for Android - A fork of lexic (https://code.google.com/p/lexic).
   - ⭐ **336** · Last updated: `2026-07-02` · `Java` · `GPL-3.0-only`
 - **[Gurgle](https://github.com/billthefarmer/gurgle)** : Fairly simple android word game.
