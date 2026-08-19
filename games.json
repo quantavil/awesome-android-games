@@ -62,7 +62,7 @@
     "description": "Traditional roguelike dungeon crawler RPG with deep tactical turn-based combat.",
     "genre": "Roguelike & RPG",
     "tech": "Java / LibGDX",
-    "stars": 6439,
+    "stars": 6440,
     "last_commit": "2026-08-15",
     "license": "GPL-3.0",
     "default_branch": "master",

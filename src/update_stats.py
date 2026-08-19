@@ -123,15 +123,15 @@ def generate_game_markdown_item(game: Dict[str, Any]) -> str:
     archived_badge = " *(Archived)*" if game.get("archived") else ""
 
     meta_parts = [
-        f"`{tech}`",
         f"⭐ **{stars_formatted}**",
         f"Last updated: `{last_commit}`",
+        f"`{tech}`",
     ]
     if license_str and license_str not in ("Unknown", "NOASSERTION"):
         meta_parts.append(f"`{license_str}`")
 
     meta_line = " · ".join(meta_parts)
-    return f"- **[{name}]({url})**{archived_badge} — {desc}\n  - {meta_line}"
+    return f"- **[{name}]({url})**{archived_badge} : {desc}\n  - {meta_line}"
 
 
 def generate_markdown_list(games: List[Dict[str, Any]], grouped: bool = True) -> str:
@@ -201,7 +201,7 @@ def update_readme(markdown_list: str, total_count: int) -> bool:
     )
     updated_replacement = (
         f'<!-- LAST_UPDATED --><a href="#games-list">'
-        f'<img src="https://img.shields.io/badge/Updated-{today_badge}-00e5ff.svg'
+        f'<img src="https://img.shields.io/badge/Updated-{today_badge}-blueviolet.svg'
         '?style=flat-square" '
         'alt="Last Updated" /></a><!-- /LAST_UPDATED -->'
     )
