@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://awesome.re"><img src="https://awesome.re/badge-flat2.svg" alt="Awesome" /></a>
-  <!-- TOTAL_GAMES_COUNT --><a href="#games-list"><img src="https://img.shields.io/badge/Games-252-3ddc84.svg?style=flat-square" alt="Tracked Games" /></a><!-- /TOTAL_GAMES_COUNT -->
+  <!-- TOTAL_GAMES_COUNT --><a href="#games-list"><img src="https://img.shields.io/badge/Games-246-3ddc84.svg?style=flat-square" alt="Tracked Games" /></a><!-- /TOTAL_GAMES_COUNT -->
   <!-- LAST_UPDATED --><a href="#games-list"><img src="https://img.shields.io/badge/Updated-2026--08--19-blueviolet.svg?style=flat-square" alt="Last Updated" /></a><!-- /LAST_UPDATED -->
   <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" /></a>
 </p>
@@ -24,14 +24,14 @@
 - [Roguelike & Dungeon Crawler](#roguelike--dungeon-crawler) (13)
 - [RPG & Adventure](#rpg--adventure) (9)
 - [Sandbox & Simulation](#sandbox--simulation) (9)
-- [Board & Card Games](#board--card-games) (38)
+- [Board & Card Games](#board--card-games) (37)
 - [Puzzle & Logic](#puzzle--logic) (51)
-- [Word, Trivia & Educational](#word-trivia--educational) (16)
+- [Word, Trivia & Educational](#word-trivia--educational) (15)
 - [Action & Arcade](#action--arcade) (15)
 - [Platformer & Runner](#platformer--runner) (15)
 - [Racing & Sports](#racing--sports) (4)
 - [Rhythm & Music](#rhythm--music) (4)
-- [Casual & Party](#casual--party) (66)
+- [Casual & Party](#casual--party) (62)
 
 ---
 
@@ -138,7 +138,7 @@
 - **[Lichess](https://github.com/lichess-org/mobile)** : Lichess mobile app.
   - ⭐ **2.5k** · Last updated: `2026-08-18` · `Flutter / Dart` · `GPL-3.0`
 - **[PySolFC](https://github.com/shlomif/PySolFC)** : A comprehensive, feature-rich, open source, and portable, collection of Solitaire games.
-  - ⭐ **558** · Last updated: `2026-08-18` · `Python / Kivy` · `GPL-3.0`
+  - ⭐ **559** · Last updated: `2026-08-18` · `Python / Kivy` · `GPL-3.0`
 - **[Chess](https://github.com/jcarolus/android-chess)** : Chess game for Android.
   - ⭐ **519** · Last updated: `2026-08-16` · `Java` · `MIT`
 - **[DroidFish Chess](https://github.com/peterosterlund2/droidfish)** : Feature-rich open-source chess app for Android, powered by the Stockfish engine.
@@ -175,8 +175,6 @@
   - ⭐ **33** · Last updated: `2026-08-19` · `Flutter / Dart` · `GPL-3.0`
 - **[Checkers (Privacy Friendly)](https://github.com/SecUSo/privacy-friendly-dame)** : Privacy Friendly App to play the boardgame checkers.
   - ⭐ **33** · Last updated: `2026-05-29` · `Java` · `GPL-3.0`
-- **[Hot Death](https://github.com/jpriebe/hotdeath)** : Android port of Hot Death Uno.
-  - ⭐ **33** · Last updated: `2019-10-16` · `Java` · `GPL-3.0-only`
 - **[Solitaire (Privacy Friendly)](https://github.com/SecUSo/privacy-friendly-solitaire)** : Privacy Friendly App to play Solitaire.
   - ⭐ **31** · Last updated: `2025-06-06` · `Java` · `GPL-3.0`
 - **[Blichess](https://github.com/vovagorodok/blichess)** : Fork of lichess.org mobile application with Bluetooth e-boards support.
@@ -331,8 +329,6 @@
   - ⭐ **36** · Last updated: `2026-07-20` · `Java` · `Apache-2.0`
 - **[GuessThatPokemon](https://github.com/NimaKhajehpour/GuessThatPokemon)** : A game where you guess pokemon names and you capture them.
   - ⭐ **31** · Last updated: `2025-04-28` · `Kotlin` · `MIT`
-- **[Primary](https://github.com/quaap/Primary)** : A simple educational practice game for kids and adults.
-  - ⭐ **23** · Last updated: `2018-08-21` · `Java` · `GPL-3.0`
 - **[Gridle](https://github.com/billthefarmer/gridle)** : Android word game.
   - ⭐ **22** · Last updated: `2026-03-23` · `Java` · `GPL-3.0`
 - **[Parlera — word guessing game](https://gitlab.com/enjoyingfoss/parlera)** : A party game where your friends describe and you guess.
@@ -492,8 +488,6 @@
   - ⭐ **29** · Last updated: `2025-04-26` · `Java` · `Apache-2.0`
 - **[🍓🍓🍓](https://github.com/Eve-146T/STRAWBERRY)** : 🍓🍓🍓.
   - ⭐ **29** · Last updated: `2024-08-10` · `Java` · `GPL-2.0`
-- **[Poland can into Space](https://github.com/JSandomierz/pcis)** : Help Polandball to get into Space.
-  - ⭐ **29** · Last updated: `2018-08-05` · `Java`
 - **[PipePanic](https://github.com/rnauber/pipepanic-android)** : Pipepanic for android.
   - ⭐ **28** · Last updated: `2024-05-24` · `JavaScript / HTML5` · `MIT`
 - **[Freedoom](https://github.com/emileb/Freedoom-for-Android)** : Freedoom with GZDoom for Android.
@@ -524,8 +518,6 @@
   - ⭐ **18** · Last updated: `2026-05-06` · `Shell` · `GPL-3.0`
 - **[Candy Memory](https://github.com/tube42/candymem)** : Candy Memory: a match two memory game for Android.
   - ⭐ **18** · Last updated: `2023-04-23` · `Java` · `GPL-2.0`
-- **[Seafood Berserker!](https://github.com/quaap/SeafoodBerserker)** : The best heavy-metal Viking-themed fish-slaughtering game you'll play today!.
-  - ⭐ **17** · Last updated: `2018-07-19` · `Java` · `GPL-3.0`
 - **[Egyptian Mouse Pounce](https://github.com/dozingcat/MousePounce)** : Egyptian Rat Screw in Flutter.
   - ⭐ **14** · Last updated: `2025-05-05` · `Flutter / Dart` · `GPL-3.0`
 - **[Quinb: 4 players reaction game](https://gitlab.com/deepdaikon/Quinb)** : A multiplayer reaction game: train your mind and your reflexes while having fun!
@@ -548,12 +540,8 @@
   - ⭐ **9** · Last updated: `2022-07-08` · `TypeScript / Web` · `GPL-3.0`
 - **[Ball2Box](https://codeberg.org/dulvui/ball2box)** : Swipe to shoot the ball in over 120 Levels. Can you collect the 3 stars?
   - ⭐ **8** · Last updated: `2025-10-23` · `Shooter Game` · `AGPL-3.0-or-later`
-- **[2 Player Battle](https://github.com/HassanHeydariNasab/2-player-battle)** : Destroy enemy base.
-  - ⭐ **8** · Last updated: `2020-10-13` · `Godot` · `GPL-3.0-or-later`
 - **[Paper Loop](https://github.com/Eve-146T/paper-loop)** : Its paper io but better and on fdroid.
   - ⭐ **7** · Last updated: `2026-07-03` · `Python / Kivy` · `GPL-3.0`
-- **[Rocket Guardian](https://gitlab.com/atorresm/rocket-guardian)** : Do your duty and destroy the zombies
-  - ⭐ **7** · Last updated: `2019-01-24` · `Strategy Game` · `GPL-3.0-or-later`
 - **[Impostor MX](https://github.com/retired64/ImpostorMX)** : Juego de deducción social offline construido con Flutter.
   - ⭐ **6** · Last updated: `2026-06-07` · `Flutter / Dart` · `GPL-3.0`
 - **[Retro Stack](https://codeberg.org/cosmin/retro-stack-gdx)** : Build a tower with a moving set of bricks

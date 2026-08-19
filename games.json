@@ -356,7 +356,7 @@
     "description": "A comprehensive, feature-rich, open source, and portable, collection of Solitaire games.",
     "genre": "Board & Card Games",
     "tech": "Python / Kivy",
-    "stars": 558,
+    "stars": 559,
     "last_commit": "2026-08-18",
     "license": "GPL-3.0",
     "default_branch": "master",
@@ -1771,20 +1771,6 @@
     "language": "Java"
   },
   {
-    "owner": "jpriebe",
-    "repo": "hotdeath",
-    "name": "Hot Death",
-    "description": "Android port of Hot Death Uno.",
-    "genre": "Board & Card Games",
-    "tech": "Java",
-    "stars": 33,
-    "last_commit": "2019-10-16",
-    "license": "GPL-3.0-only",
-    "default_branch": "master",
-    "archived": false,
-    "language": "Java"
-  },
-  {
     "owner": "JamesOsborn-SE",
     "repo": "eat-poop-you-cat-android",
     "name": "Eat Poop You Cat",
@@ -1921,20 +1907,6 @@
     "last_commit": "2024-08-10",
     "license": "GPL-2.0",
     "default_branch": "main",
-    "archived": false,
-    "language": "Java"
-  },
-  {
-    "owner": "JSandomierz",
-    "repo": "pcis",
-    "name": "Poland can into Space",
-    "description": "Help Polandball to get into Space.",
-    "genre": "Casual & Party",
-    "tech": "Java",
-    "stars": 29,
-    "last_commit": "2018-08-05",
-    "license": "NOASSERTION",
-    "default_branch": "master",
     "archived": false,
     "language": "Java"
   },
@@ -2174,20 +2146,6 @@
     "stars": 23,
     "last_commit": "2023-04-23",
     "license": "GPL-2.0",
-    "default_branch": "master",
-    "archived": false,
-    "language": "Java"
-  },
-  {
-    "owner": "quaap",
-    "repo": "Primary",
-    "name": "Primary",
-    "description": "A simple educational practice game for kids and adults.",
-    "genre": "Word, Trivia & Educational",
-    "tech": "Java",
-    "stars": 23,
-    "last_commit": "2018-08-21",
-    "license": "GPL-3.0",
     "default_branch": "master",
     "archived": false,
     "language": "Java"
@@ -2501,20 +2459,6 @@
     "default_branch": "main",
     "archived": false,
     "language": "Kotlin"
-  },
-  {
-    "owner": "quaap",
-    "repo": "SeafoodBerserker",
-    "name": "Seafood Berserker!",
-    "description": "The best heavy-metal Viking-themed fish-slaughtering game you'll play today!.",
-    "genre": "Casual & Party",
-    "tech": "Java",
-    "stars": 17,
-    "last_commit": "2018-07-19",
-    "license": "GPL-3.0",
-    "default_branch": "master",
-    "archived": false,
-    "language": "Java"
   },
   {
     "owner": "obfusk",
@@ -3000,20 +2944,6 @@
     "host": "codeberg.org"
   },
   {
-    "owner": "HassanHeydariNasab",
-    "repo": "2-player-battle",
-    "name": "2 Player Battle",
-    "description": "Destroy enemy base.",
-    "genre": "Casual & Party",
-    "tech": "Godot",
-    "stars": 8,
-    "last_commit": "2020-10-13",
-    "license": "GPL-3.0-or-later",
-    "default_branch": "master",
-    "archived": false,
-    "language": "GDScript"
-  },
-  {
     "owner": "sidhant947",
     "repo": "Einstein-Riddle",
     "name": "Einstein's Riddle",
@@ -3096,21 +3026,6 @@
     "default_branch": "main",
     "archived": false,
     "language": "JavaScript"
-  },
-  {
-    "owner": "atorresm",
-    "repo": "rocket-guardian",
-    "name": "Rocket Guardian",
-    "description": "Do your duty and destroy the zombies",
-    "genre": "Casual & Party",
-    "tech": "Strategy Game",
-    "stars": 7,
-    "last_commit": "2019-01-24",
-    "license": "GPL-3.0-or-later",
-    "default_branch": "master",
-    "archived": false,
-    "language": "Strategy Game",
-    "host": "gitlab.com"
   },
   {
     "owner": "clavierhaus",
