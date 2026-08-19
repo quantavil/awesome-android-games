@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://awesome.re"><img src="https://awesome.re/badge-flat2.svg" alt="Awesome" /></a>
-  <!-- TOTAL_GAMES_COUNT --><a href="#games-list"><img src="https://img.shields.io/badge/Games-52-3ddc84.svg?style=flat-square" alt="Tracked Games" /></a><!-- /TOTAL_GAMES_COUNT -->
+  <!-- TOTAL_GAMES_COUNT --><a href="#games-list"><img src="https://img.shields.io/badge/Games-57-3ddc84.svg?style=flat-square" alt="Tracked Games" /></a><!-- /TOTAL_GAMES_COUNT -->
   <!-- LAST_UPDATED --><a href="#games-list"><img src="https://img.shields.io/badge/Updated-2026--08--19-00e5ff.svg?style=flat-square" alt="Last Updated" /></a><!-- /LAST_UPDATED -->
   <a href="https://github.com/astral-sh/uv"><img src="https://img.shields.io/badge/uv-powered-blueviolet.svg?style=flat-square" alt="Powered by uv" /></a>
   <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" /></a>
@@ -25,9 +25,9 @@
 - [Strategy & 4X](#strategy-4x) (6)
 - [Roguelike & RPG](#roguelike-rpg) (13)
 - [Sandbox & Simulation](#sandbox-simulation) (3)
-- [Puzzle & Board](#puzzle-board) (19)
-- [Arcade, Action & Racing](#arcade-action-racing) (8)
-- [Casual & Adventure](#casual-adventure) (3)
+- [Puzzle & Board](#puzzle-board) (20)
+- [Arcade, Action & Racing](#arcade-action-racing) (11)
+- [Casual & Adventure](#casual-adventure) (4)
 
 ---
 
@@ -120,6 +120,8 @@
   - `Kotlin / LibGDX` · ⭐ **88** · Last updated: `2025-03-15` · `GPL-3.0`
 - **[2048 Android](https://github.com/uberspot/2048-android)** — Clean, smooth native Android open-source edition of the viral 2048 puzzle game.
   - `Java / HTML5` · ⭐ **1.1k** · Last updated: `2024-08-11` · `MIT`
+- **[Minesweeper Compose](https://github.com/jayasuryat/minesweeper-j-compose)** — Modern, smooth open-source Minesweeper puzzle game built natively with Jetpack Compose.
+  - `Kotlin / Jetpack Compose` · ⭐ **102** · Last updated: `2024-07-12` · `Apache-2.0`
 - **[DroidFish Chess](https://github.com/peterosterlund2/droidfish)** — Feature-rich open-source chess app for Android, powered by the Stockfish engine.
   - `Java / C++` · ⭐ **429** · Last updated: `2024-06-04` · `GPL-3.0`
 - **[Tetris Android](https://github.com/sandwwraith/tetris)** — Classic block puzzle game built with Kotlin and custom Android Views.
@@ -129,10 +131,14 @@
 
 - **[C-Dogs SDL](https://github.com/cxong/cdogs-sdl)** — Classic overhead run-and-gun arcade shooter with campaign and cooperative multiplayer.
   - `C / SDL` · ⭐ **1.1k** · Last updated: `2026-08-17` · `GPL-2.0`
+- **[Ricochlime](https://github.com/adil192/ricochlime)** — Fast-paced, satisfying top-down slime arena monster shooter game for Android.
+  - `Dart / Flutter` · ⭐ **163** · Last updated: `2026-08-11` · `AGPL-3.0`
 - **[SuperTuxKart](https://github.com/supertuxkart/stk-code)** — 3D open-source arcade kart racing game with multiplayer and vibrant tracks.
   - `C++` · ⭐ **5.3k** · Last updated: `2026-08-01` · `GPL-3.0`
 - **[Brick Blast](https://github.com/ashrafimostafa/Brick-Blast)** — Modern arcade brick-breaking game built with Kotlin and Jetpack Compose.
   - `Kotlin / Jetpack Compose` · ⭐ **12** · Last updated: `2026-07-30` · `MIT`
+- **[Open Surge](https://github.com/alemart/opensurge)** — 2D retro side-scrolling platformer game inspired by classic 16-bit Sonic games.
+  - `C / Allegro` · ⭐ **473** · Last updated: `2026-07-29` · `GPL-3.0`
 - **[Vector Pinball](https://github.com/dozingcat/Vector-Pinball)** — Retro vector-graphics arcade pinball game with responsive Box2D physics.
   - `Java / C++` · ⭐ **464** · Last updated: `2026-06-29` · `GPL-3.0`
 - **[tails-adventure](https://github.com/mechakotik/tails-adventure)** — Tails Adventure 2D action platformer remade from the ground up for Android and PC.
@@ -141,11 +147,15 @@
   - `C / SDL` · ⭐ **18** · Last updated: `2026-06-03` · `MIT`
 - **[retrowars](https://github.com/retrowars/retrowars)** — Multiplayer retro game arcade engine for Android featuring cross-game battles.
   - `Kotlin` · ⭐ **237** · Last updated: `2026-05-27` · `GPL-3.0`
+- **[Flappy Bird](https://github.com/VadimBoev/FlappyBird)** — Ultra-lightweight native C open-source clone of Flappy Bird for Android.
+  - `C / NDK` · ⭐ **2.4k** · Last updated: `2026-05-17`
 - **[Pixel Wheels](https://github.com/agateau/pixelwheels)** — Top-down retro 2D racing game with multiple vehicle classes, weapons, and tracks.
   - `Java / LibGDX` · ⭐ **456** · Last updated: `2026-04-18` · `GPL-3.0`
 
 ### Casual & Adventure
 
+- **[UltraStar Play](https://github.com/UltraStar-Deluxe/Play)** — Free and open-source singing rhythm party game with companion app support.
+  - `C# / Unity` · ⭐ **499** · Last updated: `2026-06-24` · `MIT`
 - **[Run01](https://github.com/is-cout/run01-unity-game)** — 3D endless runner game with fluid obstacle traversal built in Unity.
   - `C# / Unity` · ⭐ **21** · Last updated: `2025-02-21` · `GPL-3.0`
 - **[CapybaraAdventure](https://github.com/revenkogrisha/CapybaraAdventure)** — Charming casual capybara adventure runner game for Android.
