@@ -271,7 +271,7 @@ def get_sort_key(sort_mode: str) -> tuple[Callable[[Dict[str, Any]], Any], bool]
     # Default: "updated"
     return (
         lambda g: (
-            g.get("last_commit", "0000-00-00") if g.get("last_commit") != "N/A" else "0000-00-00",
+            g["last_commit"] if g.get("last_commit") not in (None, "N/A") else "0000-00-00",
             g.get("stars", 0),
         ),
         True,

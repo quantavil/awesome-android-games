@@ -9,7 +9,6 @@ from __future__ import annotations
 import json
 import os
 import re
-import stat
 import subprocess
 import tempfile
 from pathlib import Path
@@ -38,9 +37,9 @@ GENRE_MAPPINGS: Dict[str, List[str]] = {
         "dungeon",
         "crawler",
         "quest",
-        "magic ling",
         "fantasy",
         "cataclysm",
+        "turn-based rpg",
     ],
     "Puzzle & Board": [
         "puzzle",
@@ -60,7 +59,6 @@ GENRE_MAPPINGS: Dict[str, List[str]] = {
         "tetris",
         "15 puzzle",
         "tangler",
-        "gauguin",
         "brain trainer",
         "math trainer",
         "focus",
@@ -71,10 +69,7 @@ GENRE_MAPPINGS: Dict[str, List[str]] = {
         "simulation",
         "simulator",
         "transport tycoon",
-        "openttd",
         "game of life",
-        "luanti",
-        "minetest",
     ],
     "Strategy & 4X": [
         "civilization",
@@ -84,10 +79,9 @@ GENRE_MAPPINGS: Dict[str, List[str]] = {
         "tower defense",
         "automation",
         "factory",
-        "mindustry",
-        "freeciv",
-        "unciv",
         "tactics",
+        "rts",
+        "real-time strategy",
     ],
     "Arcade, Action & Racing": [
         "racing",
@@ -101,15 +95,13 @@ GENRE_MAPPINGS: Dict[str, List[str]] = {
         "platformer",
         "runner",
         "flappy",
-        "sonic",
-        "retro game arcade",
+        "retro arcade",
     ],
     "Casual & Adventure": [
         "casual",
         "adventure",
         "story",
         "visual novel",
-        "capybara",
         "drifting",
         "singing",
         "rhythm",
@@ -225,17 +217,10 @@ def get_github_headers(token: Optional[str] = None) -> Dict[str, str]:
 
 
 def atomic_write_text(file_path: Path, content: str, encoding: str = "utf-8") -> None:
-    """Atomically write text content to file using temp file, preserving 0o644 permissions."""
+    """Atomically write text content to file using temp file, ensuring standard 0o644 mode."""
     file_path = Path(file_path)
     parent = file_path.parent
     parent.mkdir(parents=True, exist_ok=True)
-
-    current_mode = None
-    if file_path.exists():
-        try:
-            current_mode = stat.S_IMODE(file_path.stat().st_mode)
-        except OSError:
-            current_mode = None
 
     with tempfile.NamedTemporaryFile(
         mode="w",
@@ -248,9 +233,8 @@ def atomic_write_text(file_path: Path, content: str, encoding: str = "utf-8") ->
         os.fsync(temp_file.fileno())
         temp_path = Path(temp_file.name)
 
-    mode_to_set = current_mode if current_mode is not None else 0o644
     try:
-        os.chmod(temp_path, mode_to_set)
+        os.chmod(temp_path, 0o644)
     except OSError:
         pass
 
@@ -277,7 +261,7 @@ def save_games_atomic(games: List[Dict[str, Any]], file_path: Path = GAMES_JSON_
 
 
 def normalize_game_entry(raw: Dict[str, Any]) -> Dict[str, Any]:
-    """Ensure standard keys and types exist for a game entry, defensively handling None."""
+    """Ensure standard keys and types exist for a game entry, preserving custom genres."""
     raw = raw or {}
     owner = str(raw.get("owner") or "").strip()
     repo = str(raw.get("repo") or "").strip()
@@ -285,11 +269,10 @@ def normalize_game_entry(raw: Dict[str, Any]) -> Dict[str, Any]:
     desc = str(raw.get("description") or "").strip()
     tech = str(raw.get("tech") or raw.get("language") or "Android").strip()
 
+    # Trust explicit genre input if provided; otherwise infer from name + description
     raw_genre = raw.get("genre")
-    if raw_genre and raw_genre in GENRE_CATEGORIES:
-        genre = raw_genre
-    elif raw_genre:
-        genre = infer_genre(f"{raw_genre} {name} {desc}")
+    if raw_genre and str(raw_genre).strip():
+        genre = str(raw_genre).strip()
     else:
         genre = infer_genre(f"{name} {desc}")
 

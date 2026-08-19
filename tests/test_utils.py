@@ -165,9 +165,22 @@ class TestMarkdownGeneration:
     def test_non_canonical_genres_preserved(self):
         games = [
             {"name": "Game A", "owner": "a", "repo": "a", "genre": "Strategy & 4X", "stars": 10},
-            {"name": "Game B", "owner": "b", "repo": "b", "genre": "Tower Defense", "stars": 20},
+            {"name": "Game B", "owner": "b", "repo": "b", "genre": "Rhythm", "stars": 20},
         ]
         md = generate_markdown_list(games, grouped=True)
         assert "Game A" in md
         assert "Game B" in md
-        assert "Tower Defense" in md
+        assert "Rhythm" in md
+
+    def test_custom_genre_end_to_end_normalization(self):
+        raw_custom = {
+            "owner": "test",
+            "repo": "rhythm-game",
+            "name": "Rhythm Beats",
+            "genre": "Rhythm & Music",
+        }
+        normalized = normalize_game_entry(raw_custom)
+        assert normalized["genre"] == "Rhythm & Music"
+        md = generate_markdown_list([normalized], grouped=True)
+        assert "Rhythm & Music" in md
+        assert "Rhythm Beats" in md

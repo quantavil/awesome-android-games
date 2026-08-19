@@ -130,7 +130,11 @@ async def check_release_apk_async(
     async with sem:
         try:
             resp = await client.get(
-                releases_url, headers=headers, timeout=12.0, follow_redirects=True
+                releases_url,
+                headers=headers,
+                params={"per_page": 100},
+                timeout=12.0,
+                follow_redirects=True,
             )
             if resp.status_code == 200:
                 releases = resp.json()
@@ -375,15 +379,15 @@ async def main_async(args: argparse.Namespace) -> None:
     )
 
     should_add = args.auto_add
-    if not should_add and not sys.stdin.isatty():
-        console.print(
-            "[yellow]Run with --auto-add to automatically import into "
-            "games.json and update README.md[/yellow]"
-        )
-        return
-
     if not should_add:
-        should_add = Confirm.ask("Would you like to import these games into games.json?")
+        try:
+            should_add = Confirm.ask("Would you like to import these games into games.json?")
+        except (EOFError, KeyboardInterrupt):
+            console.print(
+                "[yellow]Run with --auto-add to automatically import into "
+                "games.json and update README.md[/yellow]"
+            )
+            should_add = False
 
     if should_add:
         games_list = load_games()
