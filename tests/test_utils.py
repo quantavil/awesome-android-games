@@ -72,6 +72,29 @@ class TestUrlParsing:
         owner, repo, host = parse_repo_url("git@gitlab.com:owner/repo.git")
         assert (owner, repo, host) == ("owner", "repo", "gitlab.com")
 
+    def test_gitlab_nested_groups_keep_full_owner(self):
+        owner, repo, host = parse_repo_url("https://gitlab.com/group/subgroup/repo")
+        assert (owner, repo, host) == ("group/subgroup", "repo", "gitlab.com")
+
+        owner, repo, host = parse_repo_url("https://gitlab.com/group/sub/repo/-/tree/main")
+        assert (owner, repo, host) == ("group/sub", "repo", "gitlab.com")
+
+        owner, repo, host = parse_repo_url("ssh://git@gitlab.com/group/sub/repo.git")
+        assert (owner, repo, host) == ("group/sub", "repo", "gitlab.com")
+
+    def test_scheme_less_and_ssh_urls_are_accepted(self):
+        assert parse_repo_url("github.com/owner/repo") == ("owner", "repo", "github.com")
+        assert parse_repo_url("git@github.com:owner/repo.git") == (
+            "owner",
+            "repo",
+            "github.com",
+        )
+        assert parse_repo_url("www.codeberg.org/owner/repo") == (
+            "owner",
+            "repo",
+            "codeberg.org",
+        )
+
     def test_invalid_urls_and_phishing_hosts(self):
         assert parse_github_url("") == (None, None)
         assert parse_github_url("not a url") == (None, None)
@@ -149,6 +172,47 @@ class TestHeadersAndAuth:
         assert headers["Authorization"] == "token ghp_dummy123"
 
 
+class TestAtomicWriteCleanup:
+    def test_failed_replace_leaves_no_temp_file_and_keeps_original(
+        self, tmp_path: Path, monkeypatch
+    ):
+        target = tmp_path / "games.json"
+        target.write_text("original\n", encoding="utf-8")
+
+        def boom(src, dst):
+            raise OSError("simulated failure")
+
+        monkeypatch.setattr("utils.os.replace", boom)
+        try:
+            atomic_write_text(target, "new content\n")
+        except OSError:
+            pass
+
+        assert target.read_text(encoding="utf-8") == "original\n"
+        assert list(tmp_path.iterdir()) == [target]
+
+    def test_existing_permissions_are_preserved(self, tmp_path: Path):
+        target = tmp_path / "README.md"
+        target.write_text("v1\n", encoding="utf-8")
+        target.chmod(0o600)
+        atomic_write_text(target, "v2\n")
+        assert stat.S_IMODE(target.stat().st_mode) == 0o600
+
+
+class TestIsGameFilter:
+    def test_social_deduction_party_game_is_accepted(self):
+        item = {
+            "name": "Social Deduction",
+            "description": "social deduction party game",
+            "topics": ["game"],
+        }
+        assert is_game(item) is True
+
+    def test_real_non_game_utilities_are_still_rejected(self):
+        item = {"name": "Habit Tracker", "description": "habit tracker app", "topics": []}
+        assert is_game(item) is False
+
+
 class TestGenreInferenceAndSchema:
     def test_infer_genre(self):
         assert infer_genre("Turn-based 4X civilization strategy") == "Strategy & 4X"
@@ -168,7 +232,8 @@ class TestGenreInferenceAndSchema:
         assert normalized["owner"] == ""
         assert normalized["repo"] == ""
         assert normalized["stars"] == 0
-        assert normalized["genre"] == "Casual & Party"
+        # Unknown genres stay empty; the stats pass infers them from real repo data.
+        assert normalized["genre"] == ""
 
     def test_normalize_game_entry(self):
         raw = {
@@ -216,54 +281,72 @@ class TestMarkdownGeneration:
 
 class TestGameHeuristic:
     def test_genuine_games_pass(self):
-        assert is_game({
-            "name": "Pixel Dungeon",
-            "description": "Roguelike RPG game",
-            "topics": ["android", "game"],
-        })
-        assert is_game({
-            "name": "Mindustry",
-            "description": "A sandbox tower-defense factory automation game",
-            "topics": ["libgdx"],
-        })
-        assert is_game({
-            "name": "Unciv",
-            "description": "Open-source 4X civilization-building strategy game",
-            "topics": ["kotlin"],
-        })
+        assert is_game(
+            {
+                "name": "Pixel Dungeon",
+                "description": "Roguelike RPG game",
+                "topics": ["android", "game"],
+            }
+        )
+        assert is_game(
+            {
+                "name": "Mindustry",
+                "description": "A sandbox tower-defense factory automation game",
+                "topics": ["libgdx"],
+            }
+        )
+        assert is_game(
+            {
+                "name": "Unciv",
+                "description": "Open-source 4X civilization-building strategy game",
+                "topics": ["kotlin"],
+            }
+        )
 
     def test_non_game_tools_and_companions_rejected(self):
         # Game companion / wiki / cheats / wallpapers / launcher / tracker
-        assert not is_game({
-            "name": "Game Launcher",
-            "description": "Android game launcher for retro games",
-            "topics": ["android", "game"],
-        })
-        assert not is_game({
-            "name": "Game Wallpaper",
-            "description": "HD wallpapers for games",
-            "topics": ["android", "game", "wallpaper"],
-        })
-        assert not is_game({
-            "name": "RPG Companion",
-            "description": "Companion app and score tracker for tabletop rpg games",
-            "topics": ["rpg"],
-        })
-        assert not is_game({
-            "name": "Minesweeper Calculator",
-            "description": "Probability calculator for minesweeper games",
-            "topics": ["puzzle"],
-        })
-        assert not is_game({
-            "name": "Game Mod Manager",
-            "description": "Mod manager for mobile games",
-            "topics": ["game"],
-        })
-        assert not is_game({
-            "name": "Video Player",
-            "description": "Simple video player app",
-            "topics": ["android"],
-        })
+        assert not is_game(
+            {
+                "name": "Game Launcher",
+                "description": "Android game launcher for retro games",
+                "topics": ["android", "game"],
+            }
+        )
+        assert not is_game(
+            {
+                "name": "Game Wallpaper",
+                "description": "HD wallpapers for games",
+                "topics": ["android", "game", "wallpaper"],
+            }
+        )
+        assert not is_game(
+            {
+                "name": "RPG Companion",
+                "description": "Companion app and score tracker for tabletop rpg games",
+                "topics": ["rpg"],
+            }
+        )
+        assert not is_game(
+            {
+                "name": "Minesweeper Calculator",
+                "description": "Probability calculator for minesweeper games",
+                "topics": ["puzzle"],
+            }
+        )
+        assert not is_game(
+            {
+                "name": "Game Mod Manager",
+                "description": "Mod manager for mobile games",
+                "topics": ["game"],
+            }
+        )
+        assert not is_game(
+            {
+                "name": "Video Player",
+                "description": "Simple video player app",
+                "topics": ["android"],
+            }
+        )
 
 
 class TestAddAndRemoveGame:
@@ -327,4 +410,3 @@ class TestAddAndRemoveGame:
         games_after_remove = load_games(fake_games_file)
         assert len(games_after_remove) == 1
         assert not any(g["repo"] == "new-game" for g in games_after_remove)
-

@@ -2,14 +2,19 @@
 
 Parses issue form submissions and slash commands (/add, /remove) to automate
 catalog additions, removals, and updates via GitHub Actions.
+
+The JSON result is the only thing written to stdout; progress messages from the
+catalog helpers go to stderr so the workflow can parse the result reliably.
 """
 
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import os
 import re
+import shlex
 import sys
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -19,6 +24,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from update_stats import add_game, remove_game
 from utils import parse_repo_url
+
+_FLAG_KEYS = {"--name": "name", "--genre": "genre", "--tech": "tech", "--desc": "desc"}
 
 
 def parse_issue_markdown_form(body: str) -> Dict[str, str]:
@@ -73,8 +80,16 @@ def parse_issue_markdown_form(body: str) -> Dict[str, str]:
 
 
 def parse_command_args(command_text: str) -> Dict[str, Any]:
-    """Parse inline arguments from comment like '/add https://... --genre "Strategy"'."""
-    tokens = command_text.strip().split()
+    """Parse inline arguments from a comment such as '/add https://... --genre "Strategy"'.
+
+    Quoted values stay intact, so ``--name "My Game"`` yields ``My Game``. If the
+    quoting is unbalanced, the text falls back to plain whitespace splitting.
+    """
+    stripped = command_text.strip()
+    try:
+        tokens = shlex.split(stripped)
+    except ValueError:
+        tokens = stripped.split()
     if not tokens:
         return {}
 
@@ -84,16 +99,10 @@ def parse_command_args(command_text: str) -> Dict[str, Any]:
     if len(tokens) > 1 and not tokens[1].startswith("--"):
         result["url"] = tokens[1]
 
-    # Simple flag parsing
-    for i, token in enumerate(tokens):
-        if token == "--name" and i + 1 < len(tokens):
-            result["name"] = tokens[i + 1]
-        elif token == "--genre" and i + 1 < len(tokens):
-            result["genre"] = tokens[i + 1]
-        elif token == "--tech" and i + 1 < len(tokens):
-            result["tech"] = tokens[i + 1]
-        elif token == "--desc" and i + 1 < len(tokens):
-            result["desc"] = tokens[i + 1]
+    for i, token in enumerate(tokens[:-1]):
+        key = _FLAG_KEYS.get(token)
+        if key:
+            result[key] = tokens[i + 1]
 
     return result
 
@@ -127,12 +136,12 @@ def handle_event(event_data: Dict[str, Any]) -> Dict[str, Any]:
         tech = cmd_info.get("tech") or form_data.get("tech")
         desc = cmd_info.get("desc") or form_data.get("description")
 
-    # 2. Check label-based trigger
+    # 2. Check label-based trigger (the workflow only fires on approved-* labels)
     elif "label" in event_data:
         label_name = event_data["label"]["name"]
-        if label_name in ("approved-add", "add-game"):
+        if label_name == "approved-add":
             action = "add"
-        elif label_name in ("approved-remove", "remove-game"):
+        elif label_name == "approved-remove":
             action = "remove"
         url = form_data.get("repo_url")
         name = form_data.get("name")
@@ -169,38 +178,47 @@ def handle_event(event_data: Dict[str, Any]) -> Dict[str, Any]:
             "message": f"Invalid repository URL format: `{url}`.",
         }
 
+    slug = f"{host}/{owner}/{repo}"
+
     if action == "add":
-        add_game(url, name=name, desc=desc, tech=tech, genre=genre)
+        status = add_game(url, name=name, desc=desc, tech=tech, genre=genre)
+        if status is None:
+            return {
+                "success": False,
+                "action": "add",
+                "url": url,
+                "slug": slug,
+                "message": f"Could not add `{slug}`: invalid repository URL.",
+            }
+        if status == "updated":
+            message = f"Updated the existing catalog entry for **{name or repo}** (`{slug}`)."
+        else:
+            message = f"Successfully added **{name or repo}** (`{slug}`) to the catalog!"
         return {
             "success": True,
             "action": "add",
+            "status": status,
             "url": url,
-            "slug": f"{host}/{owner}/{repo}",
-            "message": (
-                f"Successfully added **{name or repo}** (`{host}/{owner}/{repo}`) to the catalog!"
-            ),
+            "slug": slug,
+            "message": message,
         }
 
-    elif action == "remove":
-        removed = remove_game(url)
-        if removed:
-            return {
-                "success": True,
-                "action": "remove",
-                "url": url,
-                "slug": f"{host}/{owner}/{repo}",
-                "message": f"Successfully removed **{host}/{owner}/{repo}** from the catalog.",
-            }
-        else:
-            return {
-                "success": False,
-                "action": "remove",
-                "url": url,
-                "slug": f"{host}/{owner}/{repo}",
-                "message": f"Game **{host}/{owner}/{repo}** was not found in `games.json`.",
-            }
-
-    return {"success": False, "message": "Unknown action."}
+    removed = remove_game(url)
+    if removed:
+        return {
+            "success": True,
+            "action": "remove",
+            "url": url,
+            "slug": slug,
+            "message": f"Successfully removed **{slug}** from the catalog.",
+        }
+    return {
+        "success": False,
+        "action": "remove",
+        "url": url,
+        "slug": slug,
+        "message": f"Game **{slug}** was not found in `games.json`.",
+    }
 
 
 def main() -> None:
@@ -219,7 +237,9 @@ def main() -> None:
     with open(args.event_path, "r", encoding="utf-8") as f:
         event_data = json.load(f)
 
-    result = handle_event(event_data)
+    # Catalog helpers print progress with rich; keep stdout for the JSON result only.
+    with contextlib.redirect_stdout(sys.stderr):
+        result = handle_event(event_data)
     print(json.dumps(result, indent=2))
 
     if not result.get("success"):

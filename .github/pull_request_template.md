@@ -32,4 +32,4 @@ Please check the option that best describes your PR:
 - [ ] Verified game is functional and playable.
 - [ ] `games.json` and `README.md` are in sync (`uv run python src/update_stats.py`).
 - [ ] Ran automated tests and they pass: `uv run pytest`.
-- [ ] Ran linter and it passes: `uv run ruff check .`.
+- [ ] Ran linter and formatter and both pass: `uv run ruff check .` and `uv run ruff format --check .`.

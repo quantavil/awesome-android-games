@@ -17,7 +17,6 @@ We welcome submissions, metadata improvements, corrections, and removals to keep
   - [Adding / Updating Games](#adding--updating-games)
   - [Removing Games](#removing-games)
 - [Maintainer IssueOps Automation](#maintainer-issueops-automation)
-- [Pull Request Process](#pull-request-process)
 - [Automated Validation & CI](#automated-validation--ci)
 
 ---
@@ -35,12 +34,13 @@ Before submitting a game, please verify that it meets the following criteria:
 
 ## Supported Git Forges
 
-The project natively tracks and fetches live statistics (stars, descriptions, last activity, licenses) from multiple Git hosts:
+Any public Git repository can be submitted, but live statistics (stars, description, last activity, license) are fetched only from these hosts:
 
 - **GitHub** (`github.com`)
-- **GitLab** (`gitlab.com`, `invent.kde.org`, and self-hosted instances)
-- **Codeberg & Forgejo / Gitea** (`codeberg.org`, `tea.codeberg.org`, and self-hosted instances)
-- **SourceHut / Generic Git** (`git.sr.ht`, etc.)
+- **GitLab** (`gitlab.com`, `invent.kde.org`, `gitlab.wikimedia.org`, and any host whose name contains `gitlab`)
+- **Codeberg & Forgejo / Gitea** (`codeberg.org`, `tea.codeberg.org`, and the self-hosted instances listed in `src/utils.py`)
+
+Other hosts, such as SourceHut (`git.sr.ht`), are accepted, but their stats are not refreshed automatically. Those entries keep the values they were added with.
 
 ---
 
@@ -51,7 +51,7 @@ The project natively tracks and fetches live statistics (stars, descriptions, la
 No local setup or programming required! You can use our structured issue templates:
 
 - **[Suggest a New Game](https://github.com/quantavil/awesome-android-games/issues/new?template=add-game.yml)**: Provide the repository URL, engine/tech stack, and game details.
-- **[Update Game Metadata](https://github.com/quantavil/awesome-android-games/issues/new?template=update-game.yml)**: Fix descriptions, recategorize genres, or update URLs.
+- **[Update Game Metadata](https://github.com/quantavil/awesome-android-games/issues/new?template=update-game.yml)**: Fix descriptions, recategorize genres, or update URLs. A maintainer applies `approved-add` to the request, which updates the existing entry in place.
 - **[Request Game Removal](https://github.com/quantavil/awesome-android-games/issues/new?template=remove-game.yml)**: Report defunct, closed-source, or unplayable entries.
 
 ### Pathway B: Pull Requests (Fast-Tracked)
@@ -59,9 +59,10 @@ No local setup or programming required! You can use our structured issue templat
 If you'd like your changes merged directly:
 
 1. Fork this repository and clone locally.
-2. Use the CLI tool or edit [`games.json`](games.json).
-3. Run test and lint checks (`uv run pytest && uv run ruff check .`).
-4. Submit a Pull Request.
+2. Create a branch (`git checkout -b add-my-game`).
+3. Use the CLI tool (below) or edit [`games.json`](games.json), then run `uv run python src/update_stats.py` so `README.md` matches.
+4. Run the checks: `uv run pytest`, `uv run ruff check .`, and `uv run ruff format --check .`.
+5. Commit as `Add/Update/Remove <Game Name>` and open a Pull Request.
 
 ---
 
@@ -101,7 +102,7 @@ Maintainers can automatically process community issues using GitHub Actions Issu
 ### Comment Commands
 Comment directly on any submission issue:
 - `/add` — Adds the game using the issue form's repository URL and metadata.
-- `/add <url> [--genre <genre>] [--tech <tech>]` — Adds a game with explicit parameters.
+- `/add <url> [--genre <genre>] [--tech <tech>]` — Adds a game with explicit parameters. If the game is already listed, its details are updated in place.
 - `/remove` — Removes the game cited in the removal request issue.
 - `/remove <url>` — Removes a specific game URL.
 
@@ -112,35 +113,12 @@ Applying the following labels will automatically execute the action, sync `READM
 
 ---
 
-## Pull Request Process
-
-1. Fork this repository and clone your fork locally.
-2. Create a feature branch:
-   ```bash
-   git checkout -b add-my-game
-   ```
-3. Make your changes in `games.json` or use `src/update_stats.py`.
-4. Validate your changes:
-   ```bash
-   # Run automated test suite
-   uv run pytest
-
-   # Run linter
-   uv run ruff check .
-   ```
-5. Commit your changes:
-   ```bash
-   git commit -m "Add/Update/Remove <Game Name>"
-   ```
-6. Push to your fork and open a Pull Request.
-
----
-
 ## Automated Validation & CI
 
 Every Pull Request and IssueOps run automatically executes CI checks:
 - JSON schema validity and deduplication in `games.json`.
 - Markdown link and Table of Contents synchronization with `README.md`.
 - Accurate multi-forge repository parsing across GitHub, GitLab, and Codeberg.
-- Code style and lint passing with zero errors (`ruff check`).
+- Lint passing with zero errors (`ruff check`) and formatting clean (`ruff format --check`).
 - Full pytest test suite execution.
+- Workflow runs that update the catalog share one queue, so two runs never rewrite `games.json` at the same time.

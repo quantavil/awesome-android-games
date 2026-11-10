@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import base64
 import datetime
 import re
 import sys
@@ -25,13 +26,19 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from utils import (  # noqa: E402
     GENRE_CATEGORIES,
+    PLACEHOLDER_DESCRIPTION,
     README_PATH,
     atomic_write_text,
+    detect_license_from_text,
+    escape_markdown_text,
+    find_game_index,
+    forge_kind,
     format_stars,
     get_github_headers,
     get_github_token,
     github_slug,
     infer_genre,
+    is_same_game,
     load_games,
     normalize_game_entry,
     parse_repo_url,
@@ -46,6 +53,38 @@ COUNT_MARKER_REGEX = r"<!-- TOTAL_GAMES_COUNT -->.*?<!-- /TOTAL_GAMES_COUNT -->"
 UPDATED_MARKER_REGEX = r"<!-- LAST_UPDATED -->.*?<!-- /LAST_UPDATED -->"
 
 
+def _needs_description(cached_stats: Optional[Dict[str, Any]]) -> bool:
+    """True when the stored description is missing or still the add-time placeholder."""
+    if not cached_stats:
+        return True
+    current = (cached_stats.get("description") or "").strip()
+    return not current or current == PLACEHOLDER_DESCRIPTION
+
+
+async def fetch_license_fallback_async(
+    client: httpx.AsyncClient,
+    owner: str,
+    repo: str,
+    headers: Dict[str, str],
+) -> Optional[str]:
+    """Detect the license from the repository's LICENSE file.
+
+    GitHub reports NOASSERTION for licenses it cannot classify, even when the
+    LICENSE file is a standard text, so the file is read directly.
+    """
+    resp = await client.get(
+        f"https://api.github.com/repos/{owner}/{repo}/license",
+        headers=headers,
+        timeout=10.0,
+        follow_redirects=True,
+    )
+    if resp.status_code != 200:
+        return None
+    content = resp.json().get("content") or ""
+    text = base64.b64decode(content).decode("utf-8", errors="replace")
+    return detect_license_from_text(text)
+
+
 async def fetch_repo_stats_async(
     client: httpx.AsyncClient,
     owner: str,
@@ -55,7 +94,10 @@ async def fetch_repo_stats_async(
     cached_stats: Optional[Dict[str, Any]] = None,
     host: str = "github.com",
 ) -> Dict[str, Any]:
-    """Fetch repo metadata asynchronously with rate limit preservation and multi-forge support."""
+    """Fetch repo metadata asynchronously with rate limit preservation and multi-forge support.
+
+    Hosts without a live API (for example SourceHut) keep their cached values.
+    """
     stats: Dict[str, Any] = {
         "stars": cached_stats.get("stars", 0) if cached_stats else 0,
         "last_commit": cached_stats.get("last_commit", "N/A") if cached_stats else "N/A",
@@ -65,37 +107,37 @@ async def fetch_repo_stats_async(
         "language": cached_stats.get("language") if cached_stats else None,
     }
 
+    kind = forge_kind(host)
     async with sem:
         try:
-            if host in ("github.com", "www.github.com"):
-                repo_url = f"https://api.github.com/repos/{owner}/{repo}"
+            if kind == "github":
                 resp = await client.get(
-                    repo_url, headers=headers, timeout=12.0, follow_redirects=True
+                    f"https://api.github.com/repos/{owner}/{repo}",
+                    headers=headers,
+                    timeout=12.0,
+                    follow_redirects=True,
                 )
                 if resp.status_code == 200:
                     data = resp.json()
                     stats["stars"] = data.get("stargazers_count", stats["stars"])
                     stats["archived"] = data.get("archived", stats["archived"])
-                    stats["language"] = data.get("language", stats["language"])
-                    if data.get("license") and data["license"].get("spdx_id"):
-                        spdx = data["license"]["spdx_id"]
-                        if spdx != "NOASSERTION":
-                            stats["license"] = spdx
+                    stats["language"] = data.get("language") or stats["language"]
                     stats["default_branch"] = data.get("default_branch", "main")
 
-                    if cached_stats:
-                        curr_desc = cached_stats.get("description", "")
-                        if (not curr_desc or curr_desc == "Open-source Android game.") and data.get(
-                            "description"
-                        ):
-                            stats["description"] = data["description"].strip()
-                        if not cached_stats.get("name") or cached_stats.get("name") == repo:
-                            if data.get("name"):
-                                stats["name"] = data["name"].strip()
-                        if not cached_stats.get("genre"):
-                            topics = " ".join(data.get("topics", []))
-                            name_desc = f"{data.get('name', '')} {data.get('description', '')}"
-                            stats["genre"] = infer_genre(f"{name_desc} {topics}")
+                    spdx = (data.get("license") or {}).get("spdx_id") or ""
+                    if spdx and spdx != "NOASSERTION":
+                        stats["license"] = spdx
+                    else:
+                        detected = await fetch_license_fallback_async(client, owner, repo, headers)
+                        if detected:
+                            stats["license"] = detected
+
+                    if _needs_description(cached_stats) and data.get("description"):
+                        stats["description"] = data["description"].strip()
+                    if not (cached_stats or {}).get("genre"):
+                        topics = " ".join(data.get("topics", []))
+                        name_desc = f"{data.get('name', '')} {data.get('description', '')}"
+                        stats["genre"] = infer_genre(f"{name_desc} {topics}")
 
                     pushed_at = data.get("pushed_at")
                     if pushed_at:
@@ -110,7 +152,7 @@ async def fetch_repo_stats_async(
                         "Cached stats kept.[/yellow]"
                     )
 
-            elif "gitlab" in host or host in ("invent.kde.org", "gitlab.wikimedia.org"):
+            elif kind == "gitlab":
                 project_id = quote(f"{owner}/{repo}", safe="")
                 resp = await client.get(
                     f"https://{host}/api/v4/projects/{project_id}",
@@ -125,16 +167,10 @@ async def fetch_repo_stats_async(
                     last_act = data.get("last_activity_at")
                     if last_act:
                         stats["last_commit"] = last_act.split("T")[0]
-                    if data.get("description") and (
-                        not cached_stats or not cached_stats.get("description")
-                    ):
+                    if data.get("description") and _needs_description(cached_stats):
                         stats["description"] = data["description"].strip()
 
-            elif "codeberg" in host or host in (
-                "teapot.informationsanarchistik.de",
-                "git.justquitstudios.de",
-                "git.harrault.fr",
-            ):
+            elif kind == "forgejo":
                 resp = await client.get(
                     f"https://{host}/api/v1/repos/{owner}/{repo}",
                     timeout=10.0,
@@ -145,13 +181,11 @@ async def fetch_repo_stats_async(
                     stats["stars"] = data.get("stars_count", stats["stars"])
                     stats["archived"] = data.get("archived", stats["archived"])
                     stats["default_branch"] = data.get("default_branch", "main")
-                    stats["language"] = data.get("language", stats["language"])
+                    stats["language"] = data.get("language") or stats["language"]
                     updated_at = data.get("updated_at")
                     if updated_at:
                         stats["last_commit"] = updated_at.split("T")[0]
-                    if data.get("description") and (
-                        not cached_stats or not cached_stats.get("description")
-                    ):
+                    if data.get("description") and _needs_description(cached_stats):
                         stats["description"] = data["description"].strip()
 
         except Exception as e:
@@ -164,10 +198,10 @@ async def fetch_repo_stats_async(
 
 def generate_game_markdown_item(game: Dict[str, Any]) -> str:
     """Generate Markdown bullet line for a single game supporting GitHub, GitLab, Codeberg."""
-    name = game.get("name", game["repo"])
+    name = escape_markdown_text(str(game.get("name", game["repo"])))
     host = game.get("host", "github.com")
     url = game.get("url") or f"https://{host}/{game['owner']}/{game['repo']}"
-    desc = game.get("description", "").strip()
+    desc = escape_markdown_text(game.get("description", "").strip())
     tech = game.get("tech") or game.get("language") or "Android"
     stars_formatted = format_stars(game.get("stars", 0))
     last_commit = game.get("last_commit", "N/A")
@@ -241,7 +275,7 @@ def update_readme(markdown_list: str, total_count: int) -> bool:
 
     pattern = re.compile(rf"{re.escape(START_MARKER)}.*?{re.escape(END_MARKER)}", re.DOTALL)
     replacement = f"{START_MARKER}\n{markdown_list}\n{END_MARKER}"
-    new_content = pattern.sub(replacement, content)
+    new_content = pattern.sub(lambda _: replacement, content)
 
     # Update badge counters cleanly with markers outside the HTML src attribute
     today = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d")
@@ -258,8 +292,8 @@ def update_readme(markdown_list: str, total_count: int) -> bool:
         'alt="Last Updated" /></a><!-- /LAST_UPDATED -->'
     )
 
-    new_content = re.sub(COUNT_MARKER_REGEX, count_replacement, new_content)
-    new_content = re.sub(UPDATED_MARKER_REGEX, updated_replacement, new_content)
+    new_content = re.sub(COUNT_MARKER_REGEX, lambda _: count_replacement, new_content)
+    new_content = re.sub(UPDATED_MARKER_REGEX, lambda _: updated_replacement, new_content)
 
     atomic_write_text(README_PATH, new_content)
     return True
@@ -271,55 +305,55 @@ def add_game(
     desc: Optional[str] = None,
     tech: Optional[str] = None,
     genre: Optional[str] = None,
-) -> None:
-    """Add or update a game repository in games.json (supports GitHub, GitLab, Codeberg)."""
+) -> Optional[str]:
+    """Add a game, or update the details of an existing entry (GitHub, GitLab, Codeberg).
+
+    Returns "added", "updated", or None when the URL is not a valid repository URL.
+    An unknown genre is left empty so the next stats run infers it from real data.
+    """
     owner, repo, host = parse_repo_url(url)
     if not owner or not repo:
         console.print(f"[red]Error: Invalid repository URL or format: '{url}'[/red]")
-        return
+        return None
     host = host or "github.com"
 
     games = load_games()
-    for g in games:
-        g_host = g.get("host", "github.com").lower()
-        if (
-            g_host == host.lower()
-            and g["owner"].lower() == owner.lower()
-            and g["repo"].lower() == repo.lower()
-        ):
-            console.print(
-                f"[yellow]Game {host}/{owner}/{repo} already exists in games.json. "
-                "Updating details...[/yellow]"
-            )
-            if name:
-                g["name"] = name
-            if desc:
-                g["description"] = desc
-            if tech:
-                g["tech"] = tech
-            if genre:
-                g["genre"] = genre
-            save_games_atomic([normalize_game_entry(item) for item in games])
-            console.print(f"[green]Successfully updated {host}/{owner}/{repo}![/green]")
-            return
+    index = find_game_index(games, host, owner, repo)
+    if index is not None:
+        existing = games[index]
+        console.print(
+            f"[yellow]Game {host}/{owner}/{repo} already exists in games.json. "
+            "Updating details...[/yellow]"
+        )
+        if name:
+            existing["name"] = name
+        if desc:
+            existing["description"] = desc
+        if tech:
+            existing["tech"] = tech
+        if genre:
+            existing["genre"] = genre
+        save_games_atomic([normalize_game_entry(item) for item in games])
+        console.print(f"[green]Successfully updated {host}/{owner}/{repo}![/green]")
+        return "updated"
 
     new_data: Dict[str, Any] = {
         "owner": owner,
         "repo": repo,
         "name": name or repo,
-        "description": desc or "Open-source Android game.",
+        "description": desc or PLACEHOLDER_DESCRIPTION,
         "tech": tech or "Android",
         "genre": genre,
     }
     if host != "github.com":
         new_data["host"] = host
 
-    new_entry = normalize_game_entry(new_data)
-    games.append(new_entry)
+    games.append(normalize_game_entry(new_data))
     save_games_atomic(games)
     console.print(
         f"[green]Added {host}/{owner}/{repo} to games.json ({len(games)} total games)![/green]"
     )
+    return "added"
 
 
 def remove_game(url: str) -> bool:
@@ -331,25 +365,16 @@ def remove_game(url: str) -> bool:
     host = host or "github.com"
 
     games = load_games()
-    initial_len = len(games)
-    filtered = [
-        g
-        for g in games
-        if not (
-            g.get("host", "github.com").lower() == host.lower()
-            and g["owner"].lower() == owner.lower()
-            and g["repo"].lower() == repo.lower()
-        )
-    ]
+    remaining = [g for g in games if not is_same_game(g, host, owner, repo)]
 
-    if len(filtered) == initial_len:
+    if len(remaining) == len(games):
         console.print(f"[yellow]Game {host}/{owner}/{repo} not found in games.json.[/yellow]")
         return False
 
-    save_games_atomic([normalize_game_entry(item) for item in filtered])
+    save_games_atomic([normalize_game_entry(item) for item in remaining])
     console.print(
         f"[green]Removed {host}/{owner}/{repo} from games.json "
-        f"({len(filtered)} total games)![/green]"
+        f"({len(remaining)} total games)![/green]"
     )
     return True
 
@@ -373,9 +398,7 @@ def get_sort_key(sort_mode: str) -> tuple[Callable[[Dict[str, Any]], Any], bool]
     # Default: "updated"
     return (
         lambda g: (
-            g.get("last_commit")
-            if g.get("last_commit") not in (None, "N/A", "")
-            else "0000-00-00",
+            g.get("last_commit") if g.get("last_commit") not in (None, "N/A", "") else "0000-00-00",
             g.get("stars", 0),
         ),
         True,
@@ -419,11 +442,16 @@ async def main_async(args: argparse.Namespace) -> None:
         ]
         results = await asyncio.gather(*tasks)
 
-        for game, stats in zip(games, results):
-            game.update(stats)
-            # If tech was generic default and language was discovered, upgrade tech
-            if game.get("tech") in ("Android", "Kotlin/Java") and stats.get("language"):
-                game["tech"] = stats["language"]
+    for game, stats in zip(games, results):
+        game.update(stats)
+        # If tech was generic default and language was discovered, upgrade tech
+        if game.get("tech") in ("Android", "Kotlin/Java") and stats.get("language"):
+            game["tech"] = stats["language"]
+        # Last resort for entries whose host has no live API and that have no genre yet
+        if not game.get("genre"):
+            game["genre"] = infer_genre(
+                f"{game.get('name', game['repo'])} {game.get('description', '')}"
+            )
 
     # Persist updated stats atomically
     normalized_games = [normalize_game_entry(g) for g in games]
