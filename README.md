@@ -4,8 +4,8 @@
 
 <p align="center">
   <a href="https://awesome.re"><img src="https://awesome.re/badge-flat2.svg" alt="Awesome" /></a>
-  <!-- TOTAL_GAMES_COUNT --><a href="#games-list"><img src="https://img.shields.io/badge/Games-246-3ddc84.svg?style=flat-square" alt="Tracked Games" /></a><!-- /TOTAL_GAMES_COUNT -->
-  <!-- LAST_UPDATED --><a href="#games-list"><img src="https://img.shields.io/badge/Updated-2026--11--08-blueviolet.svg?style=flat-square" alt="Last Updated" /></a><!-- /LAST_UPDATED -->
+  <!-- TOTAL_GAMES_COUNT --><a href="#games-list"><img src="https://img.shields.io/badge/Games-298-3ddc84.svg?style=flat-square" alt="Tracked Games" /></a><!-- /TOTAL_GAMES_COUNT -->
+  <!-- LAST_UPDATED --><a href="#games-list"><img src="https://img.shields.io/badge/Updated-2026--11--10-blueviolet.svg?style=flat-square" alt="Last Updated" /></a><!-- /LAST_UPDATED -->
   <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" /></a>
 </p>
 
@@ -20,18 +20,18 @@
 <!-- GAMES_LIST_START -->
 ### Categories
 
-- [Strategy & 4X](#strategy--4x) (12)
+- [Strategy & 4X](#strategy--4x) (14)
 - [Roguelike & Dungeon Crawler](#roguelike--dungeon-crawler) (13)
-- [RPG & Adventure](#rpg--adventure) (9)
+- [RPG & Adventure](#rpg--adventure) (10)
 - [Sandbox & Simulation](#sandbox--simulation) (9)
-- [Board & Card Games](#board--card-games) (37)
-- [Puzzle & Logic](#puzzle--logic) (51)
-- [Word, Trivia & Educational](#word-trivia--educational) (15)
-- [Action & Arcade](#action--arcade) (15)
+- [Board & Card Games](#board--card-games) (50)
+- [Puzzle & Logic](#puzzle--logic) (77)
+- [Word, Trivia & Educational](#word-trivia--educational) (17)
+- [Action & Arcade](#action--arcade) (20)
 - [Platformer & Runner](#platformer--runner) (15)
-- [Racing & Sports](#racing--sports) (4)
-- [Rhythm & Music](#rhythm--music) (4)
-- [Casual & Party](#casual--party) (62)
+- [Racing & Sports](#racing--sports) (5)
+- [Rhythm & Music](#rhythm--music) (5)
+- [Casual & Party](#casual--party) (63)
 
 ---
 
@@ -57,6 +57,10 @@
   - ⭐ **122** · Last updated: `2026-10-19` · `Java` · `GPL-3.0`
 - **[Turns of War](https://github.com/msx80/turnsofwar)** : A turn based strategy game.
   - ⭐ **30** · Last updated: `2026-08-31` · `Java` · `GPL-3.0`
+- **[Andropolis](https://github.com/ds17f/andropolis)** : Native Android port of Micropolis (MicropolisCore C++ engine via NDK/JNI)
+  - ⭐ **15** · Last updated: `2026-09-30` · `Kotlin` · `GPL-3.0`
+- **[Space Trader Classic](https://github.com/lunchwine/space-trader-classic)** : An HTML/JS/CSS port of the classic Space Trader game, available as PWA or Android APK.
+  - ⭐ **7** · Last updated: `2026-10-16` · `HTML` · `GPL-3.0`
 - **[Latin Defense](https://github.com/bommbomm34/latindefense)** : Expand your own Roman empire!.
   - ⭐ **7** · Last updated: `2026-03-11` · `Godot`
 - **[Dima Defense ⚔️](https://codeberg.org/xolatgames/Dima-Defense)** : A simple Tower Defense game that was made in LibGDX
@@ -111,6 +115,8 @@
   - ⭐ **28** · Last updated: `2026-02-16` · `C# / Unity` · `MIT`
 - **[Metal Max Remake](https://github.com/MetalMaxRemake/metalmax)** : Remake of the classic Metal Max post-apocalyptic tank RPG on Android using OpenGL ES.
   - ⭐ **20** · Last updated: `2026-10-22` · `C++ / OpenGL` · `MIT`
+- **[Cavern Cravers](https://github.com/mlm-games/cavern-cravers)** : Open-source Android game.
+  - ⭐ **2** · Last updated: `2026-07-20` · `GDScript` · `GPL-3.0`
 
 ### Sandbox & Simulation
 
@@ -177,6 +183,8 @@
   - ⭐ **33** · Last updated: `2026-05-29` · `Java` · `GPL-3.0`
 - **[Solitaire (Privacy Friendly)](https://github.com/SecUSo/privacy-friendly-solitaire)** : Privacy Friendly App to play Solitaire.
   - ⭐ **31** · Last updated: `2025-06-06` · `Java` · `GPL-3.0`
+- **[Mobile Maia](https://github.com/Dash1971/maia-chess-android)** : An open-source, offline-first Android chess app for playing against Maia-3, with post-game Maia and Stockfish analysis and PGN export.
+  - ⭐ **30** · Last updated: `2026-10-30` · `Dart` · `AGPL-3.0`
 - **[Blichess](https://github.com/vovagorodok/blichess)** : Fork of lichess.org mobile application with Bluetooth e-boards support.
   - ⭐ **30** · Last updated: `2026-05-29` · `TypeScript / Web` · `GPL-3.0`
 - **[Mahjong Solitaire](https://github.com/sidhant947/Mahjong)** : Classic tile-matching puzzles without interruptions, tracking, or ads.
@@ -197,16 +205,40 @@
   - ⭐ **14** · Last updated: `2026-10-26` · `C / SDL` · `GPL-3.0`
 - **[Ultimate Tic Tac Toe](https://github.com/henrykvdb/UltimateTTTAndroid)** : Ultimate 9x9 strategic nested grid Tic-Tac-Toe for Android.
   - ⭐ **14** · Last updated: `2025-11-30` · `Kotlin` · `MIT`
+- **[Square Chess](https://github.com/chriotte/square-chess)** : Free, offline-first Android chess app designed for square-screen phones and physical keyboards.
+  - ⭐ **13** · Last updated: `2026-11-05` · `C++` · `GPL-3.0`
+- **[Ludo](https://github.com/sidhant947/Ludo)** : A clean, ad-free, 100% offline implementation of the classic Indian cross-and-circle board game
+  - ⭐ **11** · Last updated: `2026-10-27` · `Dart` · `GPL-3.0`
+- **[MoveAPiece: Offline Chess](https://github.com/egdels/moveapiece)** : Offline chess app for Android and desktop - Stockfish, Maia, DGT Pegasus & Chessnut Air support. No account, no ads, GPLv3.
+  - ⭐ **9** · Last updated: `2026-10-26` · `Java` · `GPL-3.0`
+- **[Fairy Mahjong](https://github.com/FairyTrick/FairyMahjong)** : Open-source Android game.
+  - ⭐ **9** · Last updated: `2026-09-20` · `Kotlin` · `Apache-2.0`
+- **[Mahjong Solitaire](https://github.com/PcmciaKai/mahjong_solitaire)** : A performance-oriented classic Mahjong Solitaire game for Android.
+  - ⭐ **8** · Last updated: `2026-10-14` · `Kotlin` · `GPL-3.0`
 - **[JustChess](https://gitlab.com/alaskalinuxuser/app_JustChess)** : Chess for one or two players
   - ⭐ **8** · Last updated: `2026-06-13` · `Board Game` · `Apache-2.0`
+- **[Chess Puzzles](https://github.com/cocodedk/chess-puzzles)** : Android chess puzzle game — solve real Lichess tactics offline. Kotlin + Jetpack Compose, 100% tested.
+  - ⭐ **7** · Last updated: `2026-11-09` · `Kotlin` · `Apache-2.0`
+- **[500 - Multiplayer card game](https://github.com/rotundtapir/500)** : FOSS 500 card game app for Android
+  - ⭐ **6** · Last updated: `2026-09-25` · `Kotlin` · `GPL-3.0`
 - **[Flang](https://codeberg.org/jannis/FlangAndroid)** : A board game similar to chess
   - ⭐ **6** · Last updated: `2026-06-17` · `Board Game` · `GPL-3.0-or-later`
 - **[OPMT](https://github.com/20Nick/OPMT)** : An android board game that is similar to Mū tōrere.
   - ⭐ **6** · Last updated: `2021-08-10` · `Java` · `GPL-3.0`
+- **[Battleship](https://github.com/cocodedk/Battleship)** : Local Battleship game for Android — naval command aesthetic, clean architecture, AI opponent
+  - ⭐ **4** · Last updated: `2026-10-07` · `Kotlin`
+- **[Open Patience](https://github.com/d-rk/open-patience)** : Solitaire — free & open source, no ads, no tracking.
+  - ⭐ **4** · Last updated: `2026-10-06` · `Dart` · `AGPL-3.0`
 - **[Navy Fleet Battle](https://github.com/tigrino/navy-fleet-battle)** : Battleship game.
   - ⭐ **4** · Last updated: `2026-07-30` · `Kotlin` · `MIT`
+- **[ConnectFour Studio](https://github.com/Patrick-Ric/connectfour-studio-android)** : ConnectFour Studio for Android: Connect Four with a perfect engine, analysis and opening book. No ads, no tracking.
+  - ⭐ **3** · Last updated: `2026-10-12` · `Kotlin` · `AGPL-3.0`
+- **[清正学園将棋部](https://github.com/hiroshiyui/SeiShinGakuen_ShougiBu)** : 【清正学園将棋部】シングルプレイヤー向けの Android 用本将棋ゲーム。タップ操作で 9×9 将棋盤を動かし、合法手判定（王手・二歩・打ち歩詰め・千日手）を完全に行い、AlphaZero スタイルの AI 対局相手は端末内（オフライン）で動作する。
+  - ⭐ **2** · Last updated: `2026-11-09` · `GDScript` · `GPL-3.0`
 - **[Collective Club Maze](https://gitlab.com/andsild/collective-club-maze)** : A game similar to the board game ricochet robots.
   - ⭐ **2** · Last updated: `2026-06-03` · `Board Game` · `GPL-3.0-or-later`
+- **[Free Klondike](https://github.com/VelbazhdSoftwareLLC/Free-Klondike)** : Free Klondike is programmed in Java. This game is a mixture between FreeCell and Klondike Solitaire. Development by Matt Stephen and Todor Balabanov.
+  - ⭐ **2** · Last updated: `2026-05-10` · `Java` · `GPL-3.0`
 - **[Boxcars](https://codeberg.org/tslocum/boxcars-android)** : Play backgammon online via bgammon.org
   - ⭐ **1** · Last updated: `2026-11-07` · `Board Game` · `AGPL-3.0-or-later`
 
@@ -236,6 +268,8 @@
   - ⭐ **208** · Last updated: `2026-05-29` · `Java` · `GPL-3.0`
 - **[Form-N-Fun](https://github.com/Rohithkvsp/Form-N-Fun)** : Draw a custom maze on paper and play it on your device using the accelerometer.
   - ⭐ **175** · Last updated: `2019-06-22` · `Java` · `MIT`
+- **[Chogan](https://github.com/choganhq/chogan)** : Fifty short, finishable games in one free, offline, open-source app: board, card, puzzle and arcade. No ads, no trackers.
+  - ⭐ **137** · Last updated: `2026-11-10` · `HTML` · `MIT`
 - **[Arrow Escape: Infinite Puzzle](https://github.com/sidhant947/ArrowEscape)** : Unwind and challenge your brain with Arrow Escape, a clean, minimalist puzzle game built purely for the love of play.
   - ⭐ **112** · Last updated: `2026-11-08` · `Flutter / Dart` · `GPL-3.0`
 - **[Flowit — Block Puzzle](https://github.com/Flowit-Game/Flowit)** : Minimalistic puzzle game.
@@ -286,10 +320,22 @@
   - ⭐ **23** · Last updated: `2023-04-23` · `Java` · `GPL-2.0`
 - **[Mines3D](https://github.com/stastnypremysl/Mines3D)** : Challenging 3D layered matrix minesweeper game for Android.
   - ⭐ **21** · Last updated: `2026-09-14` · `Java` · `GPL-3.0`
+- **[Block Blast](https://github.com/sidhant947/BlockBlast)** : A minimal, privacy-focused block puzzle game built with Flutter.
+  - ⭐ **20** · Last updated: `2026-10-16` · `Dart` · `GPL-3.0`
 - **[Sokoban(g)](https://github.com/obfusk/sokobang)** : Sokobang - sokoban puzzle w/ bigbang.coffee.
   - ⭐ **18** · Last updated: `2023-12-16` · `HTML` · `AGPL-3.0`
 - **[werewolves_game](https://github.com/davidchilin/werewolves_game)** : Werewolves (mafia) webgame server (python, apk). No Narator needed, does automatic vote and death logic. Now on F-Droid!.
   - ⭐ **17** · Last updated: `2026-10-17` · `Python / Kivy` · `GPL-3.0`
+- **[Screw Jam](https://github.com/sidhant947/ScrewJam)** : A clean, satisfying, and privacy-respecting screw puzzle game.
+  - ⭐ **17** · Last updated: `2026-10-15` · `Dart` · `GPL-3.0`
+- **[Colorgram](https://github.com/sidhant947/Colorgram)** : Solve relaxing color nonogram logic puzzles & reveal vibrant pixel art!
+  - ⭐ **17** · Last updated: `2026-10-14` · `Dart` · `GPL-3.0`
+- **[Shikaku](https://github.com/sidhant947/Shikaku)** : A minimalist block logic puzzle game built with Flutter
+  - ⭐ **14** · Last updated: `2026-10-27` · `Dart` · `GPL-3.0`
+- **[Tensy](https://github.com/rollerozxa/tensy)** : Select numbers that sum to ten
+  - ⭐ **14** · Last updated: `2026-09-23` · `C`
+- **[Hue Sort](https://github.com/sidhant947/HueSort)** : A color sorting puzzle game. Swap tiles to reconstruct the hidden gradient.
+  - ⭐ **13** · Last updated: `2026-10-20` · `Dart` · `GPL-3.0`
 - **[Einstein's Riddle](https://github.com/sidhant947/Einstein-Riddle)** : Also known as the Zebra Puzzle is a legendary logic grid puzzle game.
   - ⭐ **13** · Last updated: `2026-09-08` · `Flutter / Dart` · `GPL-3.0`
 - **[Zoysii - Logic game](https://gitlab.com/deepdaikon/Zoysii)** : A simple logic game: find the best path to delete every number in a square space
@@ -300,20 +346,58 @@
   - ⭐ **12** · Last updated: `2026-11-07` · `Flutter / Dart` · `GPL-3.0`
 - **[Chain Relations](https://github.com/andrzej-nov/ChainRelations)** : A casual connection and chain puzzle game for Android written in Kotlin.
   - ⭐ **12** · Last updated: `2026-09-24` · `Kotlin` · `CC-BY-4.0`
+- **[Free the bugs](https://github.com/mlm-games/free-the-bugs)** : A game on solving small Gava bugs
+  - ⭐ **12** · Last updated: `2026-02-14` · `GDScript` · `GPL-3.0`
 - **[IED](https://codeberg.org/Krixec/IED-FDroid)** : Imagine Minesweeper ... but in 3D
   - ⭐ **12** · Last updated: `2025-11-08` · `Puzzle Game` · `MIT`
+- **[Matrix Puzzle](https://github.com/sidhant947/Matrix-Puzzle)** : A minimal, open-source matrix puzzle game also known as floor puzzle.
+  - ⭐ **11** · Last updated: `2026-11-07` · `Dart` · `GPL-3.0`
+- **[Twist Cubee](https://github.com/zk-haunt/Twist-cubee)** : Offline, open-source 3D cube puzzle for Android. 2×2 to 20×20, solver, timer. No ads, no tracking.
+  - ⭐ **11** · Last updated: `2026-10-18` · `Kotlin` · `MIT`
+- **[Tents](https://github.com/sidhant947/Tents)** : Place tents in the grid so that every tree is paired with a tent according to grid constraints
+  - ⭐ **10** · Last updated: `2026-11-06` · `Dart` · `GPL-3.0`
+- **[Cubit](https://github.com/taynotfound/cubit)** : A hard little cube of arrows. Free the pink one. Native Android puzzle, no ads, with a verified Go leaderboard.
+  - ⭐ **9** · Last updated: `2026-11-05` · `Kotlin` · `MIT`
+- **[Tangram](https://github.com/Typraeurion/Android-Tangram)** : Make or solve Tangram puzzles
+  - ⭐ **8** · Last updated: `2026-09-21` · `Java` · `GPL-3.0`
 - **[Futoshiki](https://github.com/samgrande/Simple-Futoshiki)** : A clean, modern Futoshiki puzzle game built with Kotlin.
   - ⭐ **8** · Last updated: `2026-08-07` · `Kotlin` · `Apache-2.0`
+- **[Flow: Connect Dots Puzzle](https://github.com/sidhant947/Flow)** : Relax your brain with satisfying color line puzzles. Connect dots & clear boards!
+  - ⭐ **7** · Last updated: `2026-10-30` · `Dart` · `GPL-3.0`
+- **[Oubliettes](https://github.com/all3f0r1/oubliettes)** : Dungeon logic puzzle for Android: find the walls from the row and column counts. Campaign, endless, daily, lessons. No ads, no network.
+  - ⭐ **7** · Last updated: `2026-10-21` · `Kotlin` · `GPL-3.0`
+- **[Pipes: Water Flow Puzzle](https://github.com/sidhant947/Pipes)** : An addictive and relaxing logic puzzle game that challenges your brain and sharpens your spatial thinking
+  - ⭐ **7** · Last updated: `2026-10-16` · `Dart` · `GPL-3.0`
 - **[DropCount](https://github.com/jdanders/dropcount)** : A recreation of the classic Drop7 puzzle game for Android.
   - ⭐ **6** · Last updated: `2026-10-27` · `Kotlin`
 - **[Hue Spill](https://github.com/sidhant947/HueSpill)** : Hue Spill! A simple, relaxing, yet incredibly challenging puzzle game.
   - ⭐ **6** · Last updated: `2026-09-09` · `Flutter / Dart` · `GPL-3.0`
+- **[Regex Crossword](https://github.com/CuSO4Deposit/regex-crossword)** : Crosswords, but defined by Regex
+  - ⭐ **5** · Last updated: `2026-10-28` · `Kotlin` · `MIT`
 - **[Minesweeper](https://github.com/JoelDankert/Minesweeper-for-Android)** : Configurable offline Minesweeper for Android.
   - ⭐ **5** · Last updated: `2026-10-14` · `Kotlin`
+- **[Bubble Night](https://github.com/SyscallBrain/bubble-night)** : An offline bubble shooter for Android: 600 levels in three difficulties, every variant backed by a replayable solution certificate. Kotlin + Jetpack Compose.
+  - ⭐ **4** · Last updated: `2026-10-12` · `Kotlin` · `MIT`
+- **[Jigsaw Solitaire](https://github.com/sidhant947/Jigsaw)** : A beautifully tactile, relaxing jigsaw puzzle game built with Flutter.
+  - ⭐ **4** · Last updated: `2026-09-27` · `Dart` · `GPL-3.0`
 - **[MasterMindy](https://github.com/Matteljay/mastermindy-android)** : The customizable Mastermind clone - android edition.
   - ⭐ **4** · Last updated: `2026-01-07` · `Java` · `MIT`
 - **[Sudaku - Pattern-driven sudoku](https://codeberg.org/theoden8/sudaku)** : Find patterns to solve sudoku - your sudoku workhorse handles the grunt work
   - ⭐ **3** · Last updated: `2026-08-24` · `Puzzle Game` · `MIT`
+- **[One Line Puzzle](https://github.com/sidhant947/OneLine)** : Draw a single continuous line to connect numbers and completely fill the grid!
+  - ⭐ **2** · Last updated: `2026-10-21` · `Dart` · `GPL-3.0`
+- **[Kakuro](https://github.com/sidhant947/Kakuro)** : Master your mind with Kakuro, the ultimate fusion of classic crosswords and number logic puzzles! Often called Cross Sums
+  - ⭐ **2** · Last updated: `2026-09-24` · `Dart` · `GPL-3.0`
+- **[Binary Puzzle](https://github.com/sidhant947/BinaryPuzzle)** : A minimalist binary placement logic puzzle game.
+  - ⭐ **2** · Last updated: `2026-09-23` · `Dart` · `GPL-3.0`
+- **[Block Night](https://github.com/SyscallBrain/block-night)** : An offline falling-blocks game for Android: 600 floors in 12 districts and three difficulties, every variant backed by a replayable solution certificate. Kotlin + Jetpack Compose.
+  - ⭐ **1** · Last updated: `2026-10-12` · `Kotlin` · `MIT`
+- **[Slitherlink: Logic Loop Puzzle](https://github.com/sidhant947/Slitherlink)** : Challenge your brain with Slitherlink, the timeless Japanese logic puzzle where deductive reasoning meets minimalist design
+  - ⭐ **1** · Last updated: `2026-09-26` · `Dart` · `GPL-3.0`
+- **[Triple Match](https://github.com/sidhant947/TripleMatch)** : A minimal, open-source 3D tile-matching puzzle game.
+  - ⭐ **1** · Last updated: `2026-09-08` · `Dart` · `GPL-3.0`
+- **[BlocksTV](https://github.com/22pumba22/BlocksTV)** : A neon-style falling-block puzzle game for Android TV, with remote, D-pad, and gamepad support.
+  - ⭐ **0** · Last updated: `2026-11-08` · `Kotlin` · `MIT`
 
 ### Word, Trivia & Educational
 
@@ -325,6 +409,8 @@
   - ⭐ **69** · Last updated: `2026-03-10` · `Java` · `GPL-3.0`
 - **[Forkyz](https://gitlab.com/Hague/forkyz)** : Crossword puzzles application, download and play.
   - ⭐ **41** · Last updated: `2026-11-07` · `Word Game` · `GPL-3.0-only`
+- **[Hangman Compose](https://github.com/RajashekarRaju/hangman-compose)** : 🎮 Kotlin Multiplatform Hangman (Android, Desktop, Web, iOS) built with Compose Multiplatform. Modular architecture with shared game engine, dynamic word catalog (DSL), responsive layouts, custom creepy-themed UI + animations, cross-platform audio, hints/timer/difficulty modes, persistent settings/history, automated CI/CD deployed to GitHub pages.
+  - ⭐ **39** · Last updated: `2026-03-12` · `Kotlin` · `Apache-2.0`
 - **[Sopa Word Puzzle](https://github.com/djschilling/sopa)** : Grid-based word search puzzle game with physics-based interactions for Android.
   - ⭐ **36** · Last updated: `2026-07-20` · `Java` · `Apache-2.0`
 - **[GuessThatPokemon](https://github.com/NimaKhajehpour/GuessThatPokemon)** : A game where you guess pokemon names and you capture them.
@@ -341,6 +427,8 @@
   - ⭐ **13** · Last updated: `2023-11-14` · `Word Game` · `Apache-2.0`
 - **[unjumble](https://github.com/wbpxre150/unjumble)** : A anagram game with picture hints.
   - ⭐ **7** · Last updated: `2025-06-26` · `Kotlin` · `MIT`
+- **[Find Words: Word Search Puzzle](https://github.com/sidhant947/FindWords)** : Swipe and connect scrambled letters to reveal hidden words in every puzzle
+  - ⭐ **6** · Last updated: `2026-10-08` · `Dart` · `GPL-3.0`
 - **[MyKanji](https://github.com/hathibelagal-dev/MyKanji)** : Yet another Android app for learning kanji.
   - ⭐ **6** · Last updated: `2025-06-13` · `JavaScript / HTML5` · `GPL-3.0`
 - **[Ahorcado](https://github.com/Webierta/ahorcandroid)** : Juego de El Ahorcado para android.
@@ -372,12 +460,22 @@
   - ⭐ **20** · Last updated: `2025-11-24` · `Godot` · `GPL-3.0`
 - **[Stack Tower 3D](https://github.com/Eve-146T/3DStackTower)** : Stack sliding blocks into the tallest tower you can. One-tap 3D arcade.
   - ⭐ **16** · Last updated: `2026-06-21` · `Java` · `GPL-3.0`
+- **[Space Vertex Multiplayer](https://github.com/smart-fun/SpaceVertex)** : Android multiplayer game
+  - ⭐ **15** · Last updated: `2026-10-18` · `Java` · `MIT`
 - **[Brick Blast](https://github.com/ashrafimostafa/Brick-Blast)** : Modern arcade brick-breaking game built with Kotlin and Jetpack Compose.
   - ⭐ **13** · Last updated: `2026-08-28` · `Kotlin / Jetpack Compose` · `MIT`
+- **[Bubble Shooter](https://github.com/sidhant947/BubbleShooter)** : 2D bubble shooter puzzle game. Match colors, clear the grid, unlock levels, or relax in Zen mode.
+  - ⭐ **9** · Last updated: `2026-09-12` · `Dart` · `GPL-3.0`
 - **[King Pong](https://github.com/KingAlexGilbert/king-pong)** : Retro Pong-inspired arcade campaign game for browsers, Android, Linux, and Windows, with multiplayer, progressive paddle shapes, and a secret ending.
   - ⭐ **6** · Last updated: `2026-11-03` · `HTML` · `AGPL-3.0`
+- **[Dark Echo](https://github.com/kushaagrasood/dark-echo-flutter)** : 2D survival horror game with procedural mazes and intelligent AI enemy - built from scratch using Flutter's rendering APIs.
+  - ⭐ **6** · Last updated: `2026-02-15` · `Dart` · `MIT`
 - **[Cat a shooter 😼](https://codeberg.org/xolatgames/cat-a-shooter)** : Fly in the space by the cat 😼, and shoots off from enemies 🛸
   - ⭐ **5** · Last updated: `2026-09-19` · `Shooter Game` · `Apache-2.0`
+- **[Frozen Bubble SDL3](https://github.com/dchau360/frozen-bubble-sdl3)** : Frozen Bubble 2, rewritten in C++/SDL3: online multiplayer for up to 20 players, bots, tournaments and replays. Play on Linux, macOS, Windows, Android or in your browser.
+  - ⭐ **4** · Last updated: `2026-10-30` · `C++` · `GPL-2.0`
+- **[Peace Break](https://github.com/tristan-reig/Peace-Break)** : Open-source Android game.
+  - ⭐ **2** · Last updated: `2026-09-15` · `Dart` · `GPL-3.0`
 - **[Anarch RE](https://git.sr.ht/~marcin-serwin/anarch-re-android)** : Public domain from-scratch suckless Doom clone
   - ⭐ **0** · Last updated: `2026-05-04` · `C / Suckless` · `CC0-1.0`
 
@@ -424,6 +522,8 @@
   - ⭐ **460** · Last updated: `2026-04-18` · `Java / LibGDX` · `GPL-3.0`
 - **[Lato](https://gitlab.com/ar-/lato)** : A downhill snowboard game with beautiful graphics
   - ⭐ **37** · Last updated: `2026-11-07` · `Sport Game` · `GPL-3.0-or-later`
+- **[DragTree](https://github.com/flyboy-byte/drag-tree)** : NHRA Pro Tree drag strip reaction timer — Expo React Native app
+  - ⭐ **1** · Last updated: `2026-10-22` · `TypeScript` · `MIT`
 
 ### Rhythm & Music
 
@@ -435,6 +535,8 @@
   - ⭐ **78** · Last updated: `2026-07-03` · `Java` · `GPL-3.0`
 - **[Subster](https://github.com/pLum0/subster)** : Backend-free Hitster-style music timeline party game that plays your own Subsonic/Navidrome library.
   - ⭐ **9** · Last updated: `2026-10-08` · `TypeScript / Web` · `MIT`
+- **[Echo Tiles - Play Your Music](https://github.com/sidhant947/EchoTiles)** : Whether you love EDM, classical piano, pop hits, or indie beats, tap along to the music you already own—completely offline, private, and ad-free.
+  - ⭐ **5** · Last updated: `2026-11-05` · `Dart` · `GPL-3.0`
 
 ### Casual & Party
 
@@ -514,6 +616,8 @@
   - ⭐ **21** · Last updated: `2026-08-02` · `Kotlin` · `GPL-3.0`
 - **[RUTMath](https://github.com/przemarbor/RUTMath)** : Open source (GPL) application to help learning mathematics for early school children.
   - ⭐ **20** · Last updated: `2025-09-25` · `Kotlin` · `GPL-3.0`
+- **[Dice Game (Privacy Friendly)](https://github.com/SecUSo/privacy-friendly-dice-game)** : Android Application to play game with five dice.
+  - ⭐ **19** · Last updated: `2026-05-29` · `Java` · `GPL-3.0`
 - **[RoboZZle Droid](https://github.com/lostmsu/RoboZZle-Droid)** : Android port of RoboZZle game.
   - ⭐ **19** · Last updated: `2023-09-16` · `Java` · `MIT`
 - **[MOROway App](https://github.com/MOROway/moroway-app-oc)** : MOROway App OC ("Open Cordova").
