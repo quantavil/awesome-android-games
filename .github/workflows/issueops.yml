@@ -68,10 +68,7 @@ jobs:
       - name: Run Integrity Tests & Linter
         id: checks
         if: steps.sync.outcome == 'success'
-        run: |
-          uv run pytest
-          uv run ruff check .
-          uv run ruff format --check .
+        uses: ./.github/actions/catalog-checks
 
       - name: Commit & Push Changes
         id: commit_push

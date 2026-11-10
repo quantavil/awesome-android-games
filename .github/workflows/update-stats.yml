@@ -34,10 +34,7 @@ jobs:
           uv run python src/update_stats.py
 
       - name: Run Integrity Tests & Linter
-        run: |
-          uv run pytest
-          uv run ruff check .
-          uv run ruff format --check .
+        uses: ./.github/actions/catalog-checks
 
       - name: Commit & Push changes
         run: |

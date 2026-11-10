@@ -26,11 +26,5 @@ jobs:
         run: |
           uv sync
 
-      - name: Lint with Ruff
-        run: |
-          uv run ruff check .
-          uv run ruff format --check .
-
-      - name: Run Pytest Suite
-        run: |
-          uv run pytest -v
+      - name: Run Integrity Tests & Linter
+        uses: ./.github/actions/catalog-checks
