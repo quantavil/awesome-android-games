@@ -1,0 +1,41 @@
+name: 🗑️ Request Game Removal
+description: Request the removal of an existing game from the catalog.
+title: "[Removal Request]: <Game Name or Repo>"
+labels: ["game-removal", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please use this form to report games that no longer qualify for the **Awesome Android Games** list.
+
+  - type: input
+    id: repo_url
+    attributes:
+      label: Game Repository URL or Name
+      description: The repository URL or owner/repo slug of the game to remove.
+      placeholder: https://github.com/owner/repository
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: removal_reason
+    attributes:
+      label: Reason for Removal
+      description: Select all applicable reasons.
+      options:
+        - label: Repository has been deleted, privated, or gone 404.
+        - label: Project became closed-source / proprietary.
+        - label: Repository is an unplayable demo, template, or abandoned 1-screen placeholder.
+        - label: Entry is a non-game utility (wiki, launcher, calculator, companion app, mod tool).
+        - label: Removal requested by the original repository owner/author.
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Additional Details & Context
+      description: Provide any additional context or proof supporting the removal request.
+      placeholder: Provide details explaining why this game should be removed.
+    validations:
+      required: false

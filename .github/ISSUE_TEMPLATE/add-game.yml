@@ -1,0 +1,89 @@
+name: 🎮 Suggest a New Game
+description: Submit a new open-source Android game to be added to the catalog.
+title: "[Game Submission]: <Game Name>"
+labels: ["game-submission", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting an open-source Android game! 🎉
+        Please make sure the game is open-source (OSI-approved), playable on Android, and not a non-game utility or empty template.
+
+  - type: input
+    id: repo_url
+    attributes:
+      label: Repository URL
+      description: The public URL of the game repository (GitHub, GitLab, Codeberg, etc.).
+      placeholder: https://github.com/owner/repository
+    validations:
+      required: true
+
+  - type: input
+    id: game_name
+    attributes:
+      label: Game Name (Optional)
+      description: Leave blank if same as repository name.
+      placeholder: Mindustry
+    validations:
+      required: false
+
+  - type: dropdown
+    id: genre
+    attributes:
+      label: Primary Genre
+      description: Select the genre that best categorizes this game.
+      options:
+        - "Strategy & 4X"
+        - "Roguelike & Dungeon Crawler"
+        - "RPG & Adventure"
+        - "Sandbox & Simulation"
+        - "Board & Card Games"
+        - "Puzzle & Logic"
+        - "Word, Trivia & Educational"
+        - "Action & Arcade"
+        - "Platformer & Runner"
+        - "Racing & Sports"
+        - "Rhythm & Music"
+        - "Casual & Party"
+        - "Other / Let script infer"
+    validations:
+      required: true
+
+  - type: input
+    id: tech
+    attributes:
+      label: Engine / Technology Stack (Optional)
+      description: e.g. Godot, LibGDX, Kotlin, Flutter/Flame, Unity (OSS), C++ / SDL
+      placeholder: Godot / C#
+    validations:
+      required: false
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Brief Description (Optional)
+      description: A 1-2 sentence description of the game. If blank, repository description will be used.
+      placeholder: A turn-based tactical strategy game set in space.
+    validations:
+      required: false
+
+  - type: input
+    id: play_link
+    attributes:
+      label: Playable Build / Download Link (Optional)
+      description: F-Droid, Google Play, GitHub Releases APK, or itch.io link.
+      placeholder: https://f-droid.org/packages/...
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Submission Checklist
+      options:
+        - label: The source code is publicly accessible under an open-source license.
+          required: true
+        - label: The game runs on or is buildable for Android devices.
+          required: true
+        - label: This is a genuine playable video game (not a calculator, tracker, wiki, or launcher).
+          required: true

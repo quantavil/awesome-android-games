@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Contributing Guidelines
+    url: https://github.com/quantavil/awesome-android-games/blob/main/CONTRIBUTING.md
+    about: Read our contribution guidelines and guidelines for adding games.
+  - name: 🚀 Submit a Pull Request
+    url: https://github.com/quantavil/awesome-android-games/pulls
+    about: Direct Pull Requests with games.json changes are fast-tracked!
